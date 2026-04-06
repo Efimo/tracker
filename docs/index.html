@@ -240,9 +240,45 @@ canvas{width:100%!important;height:200px!important}
 .tgrid{grid-template-columns:1fr}
 }
 .day-menu,.phase-content{display:none}.day-menu.active,.phase-content.active{display:block}
+
+/* === UPDATE BANNER === */
+.update-banner{display:none;position:fixed;top:0;left:0;right:0;z-index:200;padding:0 12px;padding-top:max(12px,env(safe-area-inset-top));animation:slideDown .4s ease}
+@keyframes slideDown{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+.update-card{background:var(--surface);border:1px solid var(--border);border-radius:0 0 var(--radius) var(--radius);padding:16px;box-shadow:var(--shadow-lg);max-width:480px;margin:0 auto}
+.update-card .uc-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.update-card .uc-icon{width:40px;height:40px;border-radius:12px;background:var(--grad4);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0}
+.update-card .uc-title{font-size:15px;font-weight:800;color:var(--text)}
+.update-card .uc-ver{font-size:11px;color:var(--text3);font-weight:600}
+.update-card .uc-log{font-size:12px;color:var(--text2);line-height:1.6;font-weight:500;margin-bottom:12px;padding:10px;background:var(--bg);border-radius:var(--radius-xs)}
+.update-card .uc-btns{display:flex;gap:8px}
+.update-card .uc-btn{flex:1;padding:12px;border-radius:var(--radius-sm);border:none;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;transition:.2s}
+.update-card .uc-btn:active{transform:scale(.97)}
+.update-card .uc-btn.primary{background:var(--green);color:#fff}
+.update-card .uc-btn.secondary{background:var(--bg);color:var(--text2);border:1px solid var(--border)}
+.update-progress{height:4px;background:var(--border);border-radius:100px;margin-top:10px;overflow:hidden;display:none}
+.update-progress .up-fill{height:100%;background:var(--green);border-radius:100px;width:0%;transition:width .3s}
 </style>
 </head>
 <body>
+
+<!-- UPDATE BANNER -->
+<div class="update-banner" id="update-banner">
+<div class="update-card">
+<div class="uc-head">
+<div class="uc-icon">&#9889;</div>
+<div>
+<div class="uc-title">Доступно обновление!</div>
+<div class="uc-ver" id="update-ver">v1.0 &rarr; v1.1</div>
+</div>
+</div>
+<div class="uc-log" id="update-log">Загрузка информации...</div>
+<div class="uc-btns">
+<button class="uc-btn secondary" onclick="dismissUpdate()">Позже</button>
+<button class="uc-btn primary" id="update-btn" onclick="downloadUpdate()">Обновить</button>
+</div>
+<div class="update-progress" id="update-progress"><div class="up-fill" id="up-fill"></div></div>
+</div>
+</div>
 
 <div class="app">
 
@@ -725,10 +761,76 @@ function updateAll(){
   var t=gs('tanya',{});if(t[todayKey()])document.querySelectorAll('.tcard').forEach(function(el){if(el.querySelector('.tt').textContent===t[todayKey()])el.classList.add('picked')});
 }
 
+// ========== AUTO UPDATE ==========
+var APP_VERSION=2; // increment this on each release
+var VERSION_URL='https://raw.githubusercontent.com/Efimo/tracker/main/version.json';
+var _updateData=null;
+
+function checkForUpdate(){
+  fetch(VERSION_URL+'?t='+Date.now()).then(function(r){return r.json()}).then(function(data){
+    if(data.version>APP_VERSION){
+      _updateData=data;
+      document.getElementById('update-ver').textContent='v'+APP_VERSION+' \u2192 v'+data.versionName;
+      document.getElementById('update-log').textContent=data.changelog||'Улучшения и исправления';
+      document.getElementById('update-banner').style.display='block';
+    }
+  }).catch(function(){/* no internet, skip */})
+}
+
+function dismissUpdate(){
+  document.getElementById('update-banner').style.display='none';
+  // remind again in 24h
+  ss('update_dismiss',Date.now());
+}
+
+function downloadUpdate(){
+  if(!_updateData)return;
+  var btn=document.getElementById('update-btn');
+  btn.textContent='Скачивание...';
+  btn.style.opacity='0.6';
+  var prog=document.getElementById('update-progress');
+  prog.style.display='block';
+
+  // For WebView (APK) — open download link in system browser
+  var isApp=navigator.userAgent.indexOf('StepanTrackerApp')!==-1;
+
+  if(isApp){
+    // In Android WebView — trigger system download
+    document.getElementById('up-fill').style.width='50%';
+    var a=document.createElement('a');
+    a.href=_updateData.apkUrl;
+    a.download='StepanTracker.apk';
+    // Try direct download
+    fetch(_updateData.apkUrl).then(function(r){return r.blob()}).then(function(blob){
+      document.getElementById('up-fill').style.width='90%';
+      var url=URL.createObjectURL(blob);
+      var a2=document.createElement('a');
+      a2.href=url;a2.download='StepanTracker-v'+_updateData.versionName+'.apk';
+      document.body.appendChild(a2);a2.click();document.body.removeChild(a2);
+      setTimeout(function(){URL.revokeObjectURL(url)},5000);
+      document.getElementById('up-fill').style.width='100%';
+      btn.textContent='Скачано! Установите файл';
+      btn.style.opacity='1';
+    }).catch(function(){
+      // Fallback: open in browser
+      window.open(_updateData.apkUrl,'_system');
+      btn.textContent='Открываю загрузку...';
+      btn.style.opacity='1';
+    });
+  } else {
+    // Web version — just reload from new source
+    document.getElementById('up-fill').style.width='100%';
+    btn.textContent='Обновляю...';
+    setTimeout(function(){location.reload(true)},1000);
+  }
+}
+
 // ========== INIT ==========
 initWater();initSwipe();updateAll();
 if(gs('jsonbin_id',null))setTimeout(cloudSync,1000);
 window.addEventListener('resize',function(){drawWeightChart()});
+// Check updates on start (with 2s delay)
+setTimeout(checkForUpdate,2000);
 </script>
 </body>
 </html>

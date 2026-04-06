@@ -2,17 +2,28 @@ package com.stepan.tracker;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
+import android.os.Environment;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.DownloadListener;
+import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
+import androidx.core.content.FileProvider;
+
+import java.io.File;
 
 public class MainActivity extends Activity {
 
@@ -23,25 +34,30 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Fullscreen immersive, dark status bar
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         Window window = getWindow();
-        window.setStatusBarColor(Color.parseColor("#0a0a0f"));
-        window.setNavigationBarColor(Color.parseColor("#0a0a0f"));
+        window.setStatusBarColor(Color.parseColor("#f5f5fa"));
+        window.setNavigationBarColor(Color.parseColor("#ffffff"));
+
+        // Light status bar icons (dark icons on light background)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.getDecorView().setSystemUiVisibility(
+                android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
+                android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+            );
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             window.getAttributes().layoutInDisplayCutoutMode =
                 WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
         }
 
-        // Create WebView
         webView = new WebView(this);
         setContentView(webView);
 
-        // Configure WebView
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);              // localStorage support!
+        settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
@@ -54,20 +70,22 @@ public class MainActivity extends Activity {
         settings.setDisplayZoomControls(false);
         settings.setTextZoom(100);
 
-        // Set user agent to include app identifier
         String ua = settings.getUserAgentString();
         settings.setUserAgentString(ua + " StepanTrackerApp/1.0");
 
-        // WebView client — handle links inside the app
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                // Allow JSONBin API calls
-                if (url.contains("jsonbin.io")) {
+                if (url.contains("jsonbin.io") || url.contains("openai.com")) {
                     return false;
                 }
-                // Load everything else in WebView
+                // Open APK downloads in system browser
+                if (url.endsWith(".apk")) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(intent);
+                    return true;
+                }
                 view.loadUrl(url);
                 return true;
             }
@@ -75,10 +93,32 @@ public class MainActivity extends Activity {
 
         webView.setWebChromeClient(new WebChromeClient());
 
-        // Set background color to match app theme
-        webView.setBackgroundColor(Color.parseColor("#0a0a0f"));
+        // Handle file downloads (APK updates)
+        webView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
+                try {
+                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                    String filename = URLUtil.guessFileName(url, contentDisposition, mimeType);
+                    request.setTitle("Обновление трекера");
+                    request.setDescription("Скачивание " + filename);
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+                    request.setMimeType("application/vnd.android.package-archive");
 
-        // Load the tracker from assets
+                    DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                    dm.enqueue(request);
+
+                    Toast.makeText(MainActivity.this, "Скачивание обновления...", Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    // Fallback: open in browser
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(intent);
+                }
+            }
+        });
+
+        webView.setBackgroundColor(Color.parseColor("#f5f5fa"));
         webView.loadUrl("file:///android_asset/tracker.html");
     }
 
@@ -94,24 +134,18 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (webView != null) {
-            webView.onResume();
-        }
+        if (webView != null) webView.onResume();
     }
 
     @Override
     protected void onPause() {
-        if (webView != null) {
-            webView.onPause();
-        }
+        if (webView != null) webView.onPause();
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        if (webView != null) {
-            webView.destroy();
-        }
+        if (webView != null) webView.destroy();
         super.onDestroy();
     }
 }
