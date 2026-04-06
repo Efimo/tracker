@@ -812,15 +812,15 @@ function toggleTheme(){
 initTheme();
 
 // ========== AUTO UPDATE ==========
-var APP_VERSION=5; // must match version.json on GitHub
+var APP_VERSION='1.4'; // current version — must match latest release tag
 var GH_API='https://api.github.com/repos/Efimo/tracker/releases/latest';
 var _updateData=null;
 
 function checkForUpdate(){
   fetch(GH_API).then(function(r){return r.json()}).then(function(data){
     if(!data.tag_name)return;
-    var remoteVer=parseInt(data.tag_name.replace(/[^0-9]/g,''))||0;
-    if(remoteVer>APP_VERSION){
+    var remoteTag=data.tag_name.replace(/^v/,''); // "1.4" from "v1.4"
+    if(remoteTag!==APP_VERSION){
       var apkAsset=null;
       if(data.assets)data.assets.forEach(function(a){if(a.name.endsWith('.apk'))apkAsset=a});
       _updateData={
@@ -829,7 +829,7 @@ function checkForUpdate(){
         changelog:data.body||'Улучшения и исправления',
         apkUrl:apkAsset?apkAsset.browser_download_url:''
       };
-      document.getElementById('update-ver').textContent='v'+APP_VERSION+' \u2192 '+data.tag_name;
+      document.getElementById('update-ver').textContent='v'+APP_VERSION+' \u2192 v'+remoteTag;
       document.getElementById('update-log').textContent=_updateData.changelog;
       document.getElementById('update-banner').style.display='block';
     }
