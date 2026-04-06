@@ -54,14 +54,14 @@ html{scroll-behavior:smooth}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px}
 
-.app{max-width:480px;margin:0 auto;padding:0 16px 90px;padding-top:max(12px,env(safe-area-inset-top));position:relative}
+.app{max-width:480px;margin:0 auto;padding:0 16px 96px;padding-top:max(16px,env(safe-area-inset-top));position:relative}
 
 /* === TOP BAR === */
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 0 8px}
 .topbar-left{display:flex;align-items:center;gap:10px}
 .avatar{width:40px;height:40px;border-radius:50%;background:var(--grad1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px}
-.topbar-info .name{font-size:15px;font-weight:800;color:var(--text)}
-.topbar-info .date{font-size:11px;color:var(--text3);font-weight:500}
+.topbar-info .name{font-size:18px;font-weight:800;color:var(--text)}
+.topbar-info .date{font-size:13px;color:var(--text3);font-weight:500}
 .topbar-actions{display:flex;gap:6px}
 .topbar-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;font-size:16px}
 .topbar-btn:active{transform:scale(.92)}
@@ -77,14 +77,14 @@ input[type="file"]{display:none}
 /* === SWIPE CONTAINER === */
 .swipe-container{position:relative;overflow:hidden;touch-action:pan-y;width:100%;clip-path:inset(0)}
 .swipe-track{display:flex;transition:transform .35s cubic-bezier(.22,1,.36,1);will-change:transform}
-.swipe-page{width:100%;min-width:100%;flex-shrink:0;overflow:hidden}
+.swipe-page{width:100%;min-width:100%;flex-shrink:0;overflow-y:auto;overflow-x:hidden}
 
 /* === HERO === */
-.hero{background:var(--grad1);border-radius:20px;padding:18px 16px;margin:8px 0;color:#fff;position:relative;overflow:hidden}
+.hero{background:var(--grad1);border-radius:24px;padding:24px 20px;margin:12px 0;color:#fff;position:relative;overflow:hidden}
 .hero::after{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:rgba(255,255,255,.1);border-radius:50%}
 .hero-row{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
 .hero-block{text-align:center}
-.hero-block .hv{font-size:32px;font-weight:900;line-height:1}
+.hero-block .hv{font-size:40px;font-weight:900;line-height:1}
 .hero-block .hl{font-size:10px;opacity:.7;margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 .hero-arrow{font-size:20px;opacity:.5}
 .hero-progress{margin-top:16px;position:relative;z-index:1}
@@ -93,8 +93,8 @@ input[type="file"]{display:none}
 .hero-pct{text-align:center;font-size:12px;font-weight:700;margin-top:6px;opacity:.8}
 .hero-chips{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:14px;position:relative;z-index:1}
 .hero-chip{background:rgba(255,255,255,.12);border-radius:var(--radius-sm);padding:10px 6px;text-align:center;backdrop-filter:blur(4px)}
-.hero-chip .cv{font-size:17px;font-weight:800}
-.hero-chip .cl{font-size:9px;opacity:.6;margin-top:2px;font-weight:600;letter-spacing:.3px}
+.hero-chip .cv{font-size:20px;font-weight:800}
+.hero-chip .cl{font-size:11px;opacity:.7;margin-top:3px;font-weight:600;letter-spacing:.3px}
 
 /* Weight input */
 .w-input{display:flex;gap:6px;margin-top:12px;position:relative;z-index:1}
@@ -104,43 +104,43 @@ input[type="file"]{display:none}
 .w-input button:active{transform:scale(.95)}
 
 /* === CARDS === */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
-.card-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.card-title .em{font-size:16px}
-.card-sub{font-size:11px;color:var(--text3);font-weight:500;margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.card-title .em{font-size:20px}
+.card-sub{font-size:13px;color:var(--text3);font-weight:500;margin-bottom:12px}
 
 /* Colored circle badges */
 .badge-a{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
 .ba-purple{background:var(--purple)}.ba-blue{background:var(--blue)}.ba-green{background:var(--green)}.ba-orange{background:var(--orange)}.ba-pink{background:var(--pink)}.ba-red{background:var(--red)}
 
 /* === SCHEDULE === */
-.sch{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.sch{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);min-height:52px}
 .sch:last-child{border:none}
-.sch-t{font-size:12px;font-weight:800;color:var(--accent);min-width:46px;font-variant-numeric:tabular-nums}
-.sch-txt{font-size:13px;color:var(--text2);flex:1;font-weight:500}
-.tag{font-size:9px;padding:4px 10px;border-radius:100px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+.sch-t{font-size:15px;font-weight:800;color:var(--accent);min-width:52px;font-variant-numeric:tabular-nums}
+.sch-txt{font-size:15px;color:var(--text2);flex:1;font-weight:500;line-height:1.4}
+.tag{font-size:10px;padding:5px 12px;border-radius:100px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
 .tag-food{background:var(--orange-bg);color:var(--orange)}.tag-sport{background:var(--green-bg);color:var(--green)}
 .tag-love{background:var(--pink-bg);color:var(--pink)}.tag-work{background:var(--blue-bg);color:var(--blue)}
 .tag-rest{background:var(--yellow-bg);color:var(--yellow)}
 
 /* === CHECKLIST === */
-.chk{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s}
+.chk{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;min-height:56px}
 .chk:last-child{border:none}
 .chk:active{opacity:.7}
-.chk-b{width:22px;height:22px;border-radius:7px;border:2px solid var(--dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.25s cubic-bezier(.34,1.56,.64,1)}
+.chk-b{width:26px;height:26px;border-radius:50%;border:2.5px solid var(--dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.25s cubic-bezier(.34,1.56,.64,1)}
 .chk.done .chk-b{background:var(--green);border-color:var(--green);animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
 @keyframes pop{0%{transform:scale(.8)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
-.chk.done .chk-b::after{content:'\2713';color:#fff;font-weight:800;font-size:12px}
+.chk.done .chk-b::after{content:'\2713';color:#fff;font-weight:800;font-size:14px}
 .chk.done .chk-t{text-decoration:line-through;color:var(--dim)}
-.chk-t{font-size:13px;flex:1;font-weight:500}
+.chk-t{font-size:16px;flex:1;font-weight:500;line-height:1.4}
 .minibar{background:var(--border);border-radius:100px;height:6px;overflow:hidden;margin-top:8px}
 .minibar-f{height:100%;border-radius:100px;transition:width .6s cubic-bezier(.22,1,.36,1)}
 
 /* === STATS GRID === */
 .sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
 .sbox{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 8px;text-align:center;box-shadow:var(--shadow);overflow:hidden}
-.sbox .sv{font-size:20px;font-weight:900;line-height:1;word-break:break-all}
-.sbox .sl{font-size:9px;color:var(--text3);margin-top:5px;font-weight:600;letter-spacing:.2px;text-transform:uppercase}
+.sbox .sv{font-size:24px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+.sbox .sl{font-size:11px;color:var(--text3);margin-top:6px;font-weight:600;letter-spacing:.2px;text-transform:uppercase}
 .c-green{color:var(--green)}.c-orange{color:var(--orange)}.c-red{color:var(--red)}.c-blue{color:var(--blue)}
 .c-pink{color:var(--pink)}.c-purple{color:var(--purple)}.c-yellow{color:var(--yellow)}.c-accent{color:var(--accent)}
 
@@ -150,7 +150,7 @@ canvas{width:100%!important;height:200px!important}
 
 /* === WATER === */
 .wgrid{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.wdrop{width:42px;height:42px;border-radius:var(--radius-sm);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:.25s cubic-bezier(.34,1.56,.64,1);background:var(--bg)}
+.wdrop{width:50px;height:50px;border-radius:var(--radius-sm);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;transition:.25s cubic-bezier(.34,1.56,.64,1);background:var(--bg)}
 .wdrop.filled{background:var(--blue-bg);border-color:var(--blue);animation:pop .3s}
 
 /* === CALORIES === */
@@ -162,9 +162,9 @@ canvas{width:100%!important;height:200px!important}
 .cal-del{color:var(--red);cursor:pointer;padding:4px 8px;border-radius:6px;font-weight:700;font-size:13px}
 
 /* === MEALS === */
-.meal-g{margin-bottom:14px}
-.meal-h{font-size:13px;font-weight:700;color:var(--orange);margin-bottom:4px}
-.meal-r{font-size:12px;color:var(--text2);padding:3px 0 3px 14px;display:flex;justify-content:space-between;font-weight:500}
+.meal-g{margin-bottom:16px}
+.meal-h{font-size:15px;font-weight:700;color:var(--orange);margin-bottom:6px}
+.meal-r{font-size:14px;color:var(--text2);padding:4px 0 4px 16px;display:flex;justify-content:space-between;font-weight:500}
 .meal-k{color:var(--text3);font-variant-numeric:tabular-nums}
 
 /* === MEASUREMENTS === */
@@ -217,23 +217,32 @@ canvas{width:100%!important;height:200px!important}
 .tl-kg{min-width:50px;text-align:right;font-weight:800;color:var(--text)}
 
 /* === CHAT (GPT) === */
-.chat-fab{position:fixed;bottom:80px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--grad1);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:var(--shadow-lg);z-index:60;display:flex;align-items:center;justify-content:center;transition:.2s}
+/* === AI CHAT — Modern Bottom Sheet === */
+.chat-fab{position:fixed;bottom:90px;right:16px;width:60px;height:60px;border-radius:50%;background:var(--grad1);color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 6px 20px rgba(91,95,199,.35);z-index:55;display:flex;align-items:center;justify-content:center;transition:.2s}
 .chat-fab:active{transform:scale(.9)}
-.chat-panel{position:fixed;bottom:0;left:0;right:0;top:0;background:var(--chat-bg);z-index:100;display:none;flex-direction:column}
+.chat-fab .fab-badge{position:absolute;top:0;right:0;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid var(--bg)}
+.chat-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100}
+.chat-overlay.open{display:block}
+.chat-panel{position:fixed;bottom:0;left:0;right:0;background:var(--surface);z-index:101;display:none;flex-direction:column;border-radius:24px 24px 0 0;max-height:85vh;box-shadow:0 -4px 32px rgba(0,0,0,.15)}
 .chat-panel.open{display:flex}
-.chat-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--surface);border-bottom:1px solid var(--border)}
-.chat-head .ch-back{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px}
-.chat-head .ch-title{font-size:15px;font-weight:800;flex:1}
-.chat-head .ch-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
-.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
-.msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.6;font-weight:500;word-wrap:break-word;white-space:pre-wrap}
-.msg.bot{background:var(--surface);border:1px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px}
-.msg.usr{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
-.msg.typing{color:var(--text3);font-style:italic}
-.chat-input{display:flex;gap:8px;padding:12px 16px;background:var(--surface);border-top:1px solid var(--border);padding-bottom:max(12px,env(safe-area-inset-bottom))}
-.chat-input input{flex:1;padding:12px;border-radius:100px;border:1px solid var(--border);background:var(--bg);font-size:13px;font-family:inherit;outline:none;font-weight:500;color:var(--text)}
+.chat-handle{width:40px;height:4px;border-radius:2px;background:var(--dim);margin:10px auto 0}
+.chat-head{display:flex;align-items:center;gap:12px;padding:14px 20px}
+.chat-head .ch-avatar{width:40px;height:40px;border-radius:50%;background:var(--grad1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px}
+.chat-head .ch-info{flex:1}
+.chat-head .ch-title{font-size:16px;font-weight:800;color:var(--text)}
+.chat-head .ch-status{font-size:12px;color:var(--green);font-weight:600;display:flex;align-items:center;gap:4px}
+.chat-head .ch-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green)}
+.chat-head .ch-close{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--text2)}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;min-height:200px}
+.msg{max-width:82%;padding:12px 16px;border-radius:20px;font-size:15px;line-height:1.5;font-weight:500;word-wrap:break-word;white-space:pre-wrap}
+.msg.bot{background:var(--bg);color:var(--text);align-self:flex-start;border-bottom-left-radius:6px}
+.msg.usr{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:6px}
+.msg.typing{color:var(--text3);font-style:italic;background:var(--bg)}
+.chat-input{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);padding-bottom:max(16px,env(safe-area-inset-bottom));background:var(--surface)}
+.chat-input input{flex:1;padding:14px 18px;border-radius:24px;border:1px solid var(--border);background:var(--bg);font-size:16px;font-family:inherit;outline:none;font-weight:500;color:var(--text)}
 .chat-input input:focus{border-color:var(--accent)}
-.chat-input button{width:44px;height:44px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.chat-input button{width:48px;height:48px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chat-input button:active{transform:scale(.9)}
 
 /* === BUTTON === */
 .btn{width:100%;padding:13px;border-radius:var(--radius-sm);border:none;background:var(--accent);color:#fff;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;transition:.2s;margin-top:10px}
@@ -241,12 +250,14 @@ canvas{width:100%!important;height:200px!important}
 .btn-green{background:var(--green)}
 
 /* === BOTTOM NAV === */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:4px 0;padding-bottom:max(4px,env(safe-area-inset-bottom));z-index:50;display:flex;justify-content:center}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:6px 0;padding-bottom:max(6px,env(safe-area-inset-bottom));z-index:50;display:flex;justify-content:center}
 .bnav-s{display:flex;gap:0;overflow-x:auto;max-width:480px;width:100%;-webkit-overflow-scrolling:touch;padding:0 4px}
 .bnav-s::-webkit-scrollbar{display:none}
-.nb{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 0;border:none;background:transparent;color:var(--text3);font-size:9px;font-weight:600;cursor:pointer;font-family:inherit;flex:1;min-width:44px;transition:.15s}
+.nb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;border:none;background:transparent;color:var(--text3);font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;flex:1;min-width:48px;transition:.15s}
 .nb.active{color:var(--accent)}
-.nb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nb.active::before{content:'';position:absolute;top:-2px;width:24px;height:3px;background:var(--accent);border-radius:2px}
+.nb{position:relative}
+.nb svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nb:active{transform:scale(.9)}
 
 /* === PAGE INDICATOR === */
@@ -291,7 +302,7 @@ canvas{width:100%!important;height:200px!important}
 .edit-btn:active{transform:scale(.9)}
 
 /* === PRODUCT LIST === */
-.prod-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;font-weight:500}
+.prod-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);font-size:15px;font-weight:500}
 .prod-item:last-child{border:none}
 .prod-item .prod-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--dim);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s}
 .prod-item.bought .prod-check{background:var(--green);border-color:var(--green)}
@@ -621,20 +632,27 @@ canvas{width:100%!important;height:200px!important}
 </div></div>
 
 <!-- CHAT FAB -->
-<button class="chat-fab" onclick="openChat()">&#128172;</button>
+<button class="chat-fab" onclick="openChat()">&#10024;<div class="fab-badge"></div></button>
 
-<!-- CHAT PANEL -->
+<!-- CHAT OVERLAY -->
+<div class="chat-overlay" id="chat-overlay" onclick="closeChat()"></div>
+
+<!-- CHAT PANEL (Bottom Sheet) -->
 <div class="chat-panel" id="chat-panel">
+<div class="chat-handle"></div>
 <div class="chat-head">
-<div class="ch-back" onclick="closeChat()">&#8592;</div>
-<div class="ch-title">AI-Ассистент</div>
-<div class="ch-dot"></div>
+<div class="ch-avatar">&#10024;</div>
+<div class="ch-info">
+<div class="ch-title">AI-Тренер</div>
+<div class="ch-status">Онлайн</div>
+</div>
+<div class="ch-close" onclick="closeChat()">&#10005;</div>
 </div>
 <div class="chat-msgs" id="chat-msgs">
-<div class="msg bot">Привет, Степан! Я твой AI-помощник по похудению. Спрашивай что угодно: питание, тренировки, мотивация, замены продуктов. Я знаю твой план!</div>
+<div class="msg bot">Привет, Степан! Я твой AI-тренер. Спрашивай: питание, тренировки, мотивация, замены продуктов. Знаю твой план на 100%!</div>
 </div>
 <div class="chat-input">
-<input type="text" id="chat-in" placeholder="Спроси что угодно..." onkeydown="if(event.key==='Enter')sendChat()">
+<input type="text" id="chat-in" placeholder="Спроси что-нибудь..." onkeydown="if(event.key==='Enter')sendChat()">
 <button onclick="sendChat()">&#10148;</button>
 </div>
 </div>
@@ -665,6 +683,7 @@ var GPT_KEY=''; // User sets this
 function gs(k,d){try{return JSON.parse(localStorage.getItem('st_'+k))||d}catch(e){return d}}
 function ss(k,v){localStorage.setItem('st_'+k,JSON.stringify(v))}
 function todayKey(){return new Date().toISOString().slice(0,10)}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function daysBetween(a,b){return Math.floor((new Date(b)-new Date(a))/864e5)+1}
 
 // ========== SWIPE ==========
@@ -705,7 +724,7 @@ function goToPage(idx,animate){
   track.style.transform='translateX('+-idx*100+'%)';
   document.querySelectorAll('.page-dots .dot').forEach(function(d,i){d.className='dot'+(i===idx?' active':'')});
   document.querySelectorAll('.nb').forEach(function(b,i){b.className='nb'+(i===idx?' active':'')});
-  if(idx===5)setTimeout(drawWeightChart,50);
+  if(idx===6)setTimeout(drawWeightChart,50);
 }
 
 // NAV
@@ -769,7 +788,7 @@ function updateTasksProgress(){var t=document.querySelectorAll('#daily-tasks .ch
 function getCalories(){return gs('cal_'+todayKey(),[])}
 function setCalories(c){ss('cal_'+todayKey(),c)}
 function addCalEntry(){var n=document.getElementById('cal-food-name').value.trim(),k=parseInt(document.getElementById('cal-food-kcal').value);if(!n||!k)return;var c=getCalories();c.push({name:n,kcal:k,time:new Date().toLocaleTimeString().slice(0,5)});setCalories(c);document.getElementById('cal-food-name').value='';document.getElementById('cal-food-kcal').value='';updateCalories();autoSync()}
-function deleteCalEntry(i){var c=getCalories();c.splice(i,1);setCalories(c);updateCalories()}
+function deleteCalEntry(i){var c=getCalories();c.splice(i,1);setCalories(c);updateCalories();autoSync()}
 function updateCalories(){
   var c=getCalories(),total=0,h='';c.forEach(function(e,i){total+=e.kcal;h+='<div class="cal-entry"><span>'+e.time+' '+e.name+'</span><span>'+e.kcal+' <span class="cal-del" onclick="deleteCalEntry('+i+')">&#10005;</span></span></div>'});
   document.getElementById('cal-log').innerHTML=h;document.getElementById('cal-total').textContent=total+' ккал';
@@ -826,8 +845,8 @@ function updateWeightHistory(){
 
 // ========== CHAT GPT ==========
 var chatHistory=[];
-function openChat(){document.getElementById('chat-panel').classList.add('open');document.getElementById('chat-in').focus()}
-function closeChat(){document.getElementById('chat-panel').classList.remove('open')}
+function openChat(){document.getElementById('chat-panel').classList.add('open');document.getElementById('chat-overlay').classList.add('open');setTimeout(function(){document.getElementById('chat-in').focus()},300)}
+function closeChat(){document.getElementById('chat-panel').classList.remove('open');document.getElementById('chat-overlay').classList.remove('open')}
 function sendChat(){
   var inp=document.getElementById('chat-in'),msg=inp.value.trim();if(!msg)return;inp.value='';
   addMsg(msg,'usr');
@@ -872,7 +891,7 @@ function updateAll(){
   document.getElementById('s-week-loss').textContent=wf.length?(w[wf[wf.length-1]]-cw).toFixed(1):'-';
   var d=new Date(),dn=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],mn=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
   document.getElementById('top-date').textContent=dn[d.getDay()]+', '+d.getDate()+' '+mn[d.getMonth()]+' · День '+days;
-  renderTasks();renderSchedule();renderProducts();updateTanyaStats();updateWeightHistory();updateCalories();updateWater();loadNotes();drawWeightChart();
+  renderTasks();renderSchedule();renderProducts();loadChecks();updateTanyaStats();updateWeightHistory();updateCalories();updateWater();loadNotes();drawWeightChart();
   var t=gs('tanya',{});if(t[todayKey()])document.querySelectorAll('.tcard').forEach(function(el){if(el.querySelector('.tt').textContent===t[todayKey()])el.classList.add('picked')});
 }
 
@@ -894,7 +913,7 @@ function toggleTheme(){
 initTheme();
 
 // ========== AUTO UPDATE ==========
-var APP_VERSION='1.6'; // current version — must match latest release tag
+var APP_VERSION='2.0'; // current version — must match latest release tag
 var GH_API='https://api.github.com/repos/Efimo/tracker/releases/latest';
 var _updateData=null;
 
@@ -906,7 +925,7 @@ function checkForUpdate(){
       var apkAsset=null;
       if(data.assets)data.assets.forEach(function(a){if(a.name.endsWith('.apk'))apkAsset=a});
       _updateData={
-        version:remoteVer,
+        version:remoteTag,
         versionName:data.tag_name,
         changelog:data.body||'Улучшения и исправления',
         apkUrl:apkAsset?apkAsset.browser_download_url:''
