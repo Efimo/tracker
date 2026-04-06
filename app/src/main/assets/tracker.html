@@ -763,15 +763,24 @@ function updateAll(){
 
 // ========== AUTO UPDATE ==========
 var APP_VERSION=2; // increment this on each release
-var VERSION_URL='https://raw.githubusercontent.com/Efimo/tracker/main/version.json';
+var GH_API='https://api.github.com/repos/Efimo/tracker/releases/latest';
 var _updateData=null;
 
 function checkForUpdate(){
-  fetch(VERSION_URL+'?t='+Date.now()).then(function(r){return r.json()}).then(function(data){
-    if(data.version>APP_VERSION){
-      _updateData=data;
-      document.getElementById('update-ver').textContent='v'+APP_VERSION+' \u2192 v'+data.versionName;
-      document.getElementById('update-log').textContent=data.changelog||'Улучшения и исправления';
+  fetch(GH_API).then(function(r){return r.json()}).then(function(data){
+    if(!data.tag_name)return;
+    var remoteVer=parseInt(data.tag_name.replace(/[^0-9]/g,''))||0;
+    if(remoteVer>APP_VERSION){
+      var apkAsset=null;
+      if(data.assets)data.assets.forEach(function(a){if(a.name.endsWith('.apk'))apkAsset=a});
+      _updateData={
+        version:remoteVer,
+        versionName:data.tag_name,
+        changelog:data.body||'Улучшения и исправления',
+        apkUrl:apkAsset?apkAsset.browser_download_url:''
+      };
+      document.getElementById('update-ver').textContent='v'+APP_VERSION+' \u2192 '+data.tag_name;
+      document.getElementById('update-log').textContent=_updateData.changelog;
       document.getElementById('update-banner').style.display='block';
     }
   }).catch(function(){/* no internet, skip */})
