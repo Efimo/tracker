@@ -1,6 +1,6 @@
 {
-  "version": 10,
-  "versionName": "2.1",
-  "changelog": "Premium Athletic дизайн. Шрифты DM Sans + Outfit. Прогресс-ring. Электрический зелёный акцент. Тёмная/светлая тема.",
+  "version": 11,
+  "versionName": "2.2",
+  "changelog": "Firebase авторизация (Email + Google). Общий чат в реальном времени. Онлайн-статус пользователей. Кнопка выхода.",
   "date": "2026-04-06"
 }
