@@ -271,6 +271,35 @@ canvas{width:100%!important;height:200px!important}
 .nb{font-size:8px;min-width:36px;padding:4px 0}
 .nb svg{width:16px;height:16px}
 }
+/* === MODAL === */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;justify-content:center}
+.modal-bg.open{display:flex}
+.modal-box{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:80vh;overflow-y:auto;padding:20px 16px;padding-bottom:max(20px,env(safe-area-inset-bottom));animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-box h3{font-size:16px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.modal-box h3 .close-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--text2)}
+.modal-item{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)}
+.modal-item:last-child{border:none}
+.modal-item input{flex:1;padding:8px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--bg);font-size:13px;font-family:inherit;color:var(--text);outline:none}
+.modal-item input:focus{border-color:var(--accent)}
+.modal-item .del-btn{width:28px;height:28px;border-radius:50%;border:none;background:var(--red-bg);color:var(--red);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.add-row{display:flex;gap:8px;margin-top:10px}
+.add-row input{flex:1;padding:10px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--bg);font-size:13px;font-family:inherit;color:var(--text);outline:none}
+.add-row button{padding:10px 16px;border-radius:var(--radius-xs);border:none;background:var(--accent);color:#fff;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit}
+/* Edit pencil */
+.edit-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--text3);margin-left:auto;flex-shrink:0}
+.edit-btn:active{transform:scale(.9)}
+
+/* === PRODUCT LIST === */
+.prod-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;font-weight:500}
+.prod-item:last-child{border:none}
+.prod-item .prod-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--dim);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s}
+.prod-item.bought .prod-check{background:var(--green);border-color:var(--green)}
+.prod-item.bought .prod-check::after{content:'\2713';color:#fff;font-size:11px;font-weight:800}
+.prod-item.bought .prod-name{text-decoration:line-through;color:var(--dim)}
+.prod-name{flex:1}
+.prod-qty{color:var(--text3);font-size:12px;min-width:60px;text-align:right}
+
 /* Schedule highlight */
 .sch.now{background:var(--accent-bg);border-radius:var(--radius-xs);margin:0 -8px;padding:10px 8px}
 .sch.now .sch-t{color:var(--accent)}
@@ -386,31 +415,14 @@ canvas{width:100%!important;height:200px!important}
 </div>
 
 <div class="card">
-<div class="card-title"><span class="em">&#128197;</span> Распорядок <span style="font-size:10px;color:var(--text3);font-weight:500;margin-left:auto">&#128276; = напоминание за 10 мин</span></div>
-<div class="sch" data-hour="6.5"><span class="sch-t">06:30</span><span class="sch-txt">Подъём, стакан воды</span><span class="tag tag-rest">утро</span></div>
-<div class="sch" data-hour="7"><span class="sch-t">07:00</span><span class="sch-txt">Тренировка 40 мин</span><span class="tag tag-sport">спорт</span></div>
-<div class="sch" data-hour="7.75"><span class="sch-t">07:45</span><span class="sch-txt">Душ + завтрак</span><span class="tag tag-food">еда</span></div>
-<div class="sch" data-hour="9"><span class="sch-t">09:00</span><span class="sch-txt">Работа</span><span class="tag tag-work">работа</span></div>
-<div class="sch" data-hour="13"><span class="sch-t">13:00</span><span class="sch-txt">Обед</span><span class="tag tag-food">еда</span></div>
-<div class="sch" data-hour="18"><span class="sch-t">18:00</span><span class="sch-txt">Прогулка 30 мин</span><span class="tag tag-sport">спорт</span></div>
-<div class="sch" data-hour="18.75"><span class="sch-t">18:45</span><span class="sch-txt">Ужин</span><span class="tag tag-food">еда</span></div>
-<div class="sch" data-hour="19.5"><span class="sch-t">19:30</span><span class="sch-txt">Время с Таней</span><span class="tag tag-love">Таня</span></div>
-<div class="sch" data-hour="22.5"><span class="sch-t">22:30</span><span class="sch-txt">Сон (8 часов)</span><span class="tag tag-rest">сон</span></div>
+<div class="card-title"><span class="em">&#128197;</span> Распорядок <span class="edit-btn" onclick="openEditSchedule()">&#9998;</span></div>
+<div id="schedule-list"></div>
 </div>
 <div class="card">
-<div class="card-title"><span class="em">&#9989;</span> Задачи</div>
-<div id="daily-tasks">
-<div class="chk" onclick="toggleCheck(this)" data-key="water"><div class="chk-b"></div><div class="chk-t">Выпить 2.5л воды</div></div>
-<div class="chk" onclick="toggleCheck(this)" data-key="train"><div class="chk-b"></div><div class="chk-t">Утренняя тренировка</div></div>
-<div class="chk" onclick="toggleCheck(this)" data-key="walk"><div class="chk-b"></div><div class="chk-t">Прогулка 30 мин</div></div>
-<div class="chk" onclick="toggleCheck(this)" data-key="food-ok"><div class="chk-b"></div><div class="chk-t">Питание &le;1800 ккал</div></div>
-<div class="chk" onclick="toggleCheck(this)" data-key="no-junk"><div class="chk-b"></div><div class="chk-t">Без сладкого/фастфуда</div></div>
-<div class="chk" onclick="toggleCheck(this)" data-key="tanya"><div class="chk-b"></div><div class="chk-t">Время с Таней (1 час)</div></div>
-<div class="chk" onclick="toggleCheck(this)" data-key="sleep"><div class="chk-b"></div><div class="chk-t">Лечь до 22:30</div></div>
-<div class="chk" onclick="toggleCheck(this)" data-key="weigh"><div class="chk-b"></div><div class="chk-t">Взвеситься утром</div></div>
-</div>
+<div class="card-title"><span class="em">&#9989;</span> Задачи <span class="edit-btn" onclick="openEditTasks()">&#9998;</span></div>
+<div id="daily-tasks"></div>
 <div class="minibar"><div class="minibar-f" id="tasks-progress" style="width:0%;background:var(--green)"></div></div>
-<div style="text-align:center;margin-top:5px;font-size:11px;color:var(--text3);font-weight:600"><span id="tasks-done">0</span>/8</div>
+<div style="text-align:center;margin-top:5px;font-size:11px;color:var(--text3);font-weight:600"><span id="tasks-done">0</span>/<span id="tasks-total">0</span></div>
 </div>
 </div>
 
@@ -500,6 +512,15 @@ canvas{width:100%!important;height:200px!important}
 </div>
 </div>
 
+<!-- PAGE: ПРОДУКТЫ -->
+<div class="swipe-page" data-tab="products">
+<div class="card">
+<div class="card-title"><span class="em">&#128722;</span> Список продуктов на неделю <span class="edit-btn" onclick="openEditProducts()">&#9998;</span></div>
+<div id="products-list"></div>
+<div style="text-align:center;margin-top:8px;font-size:11px;color:var(--text3);font-weight:600">Купить: <span id="prod-left">0</span> из <span id="prod-total">0</span></div>
+</div>
+</div>
+
 <!-- PAGE: ПРОГРЕСС -->
 <div class="swipe-page" data-tab="stats">
 <div class="sgrid">
@@ -523,11 +544,21 @@ canvas{width:100%!important;height:200px!important}
 <div class="card-title"><span class="em">&#10084;&#65039;</span> Время с Таней</div>
 <div class="tgrid" id="tanya-ideas">
 <div class="tcard" onclick="pickIdea(this)"><div class="ti">&#128694;</div><div class="tt">Прогулка</div></div>
-<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#127916;</div><div class="tt">Фильм</div></div>
-<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#127859;</div><div class="tt">Готовить</div></div>
-<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#127922;</div><div class="tt">Игры</div></div>
-<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#128172;</div><div class="tt">Без телефонов</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#127916;</div><div class="tt">Фильм/сериал</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#127859;</div><div class="tt">Готовить вместе</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#127922;</div><div class="tt">Настолки/игры</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#128172;</div><div class="tt">Разговор без телефонов</div></div>
 <div class="tcard" onclick="pickIdea(this)"><div class="ti">&#127947;</div><div class="tt">Спорт вместе</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#128248;</div><div class="tt">Фото/видео вместе</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#127919;</div><div class="tt">Планирование</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#128218;</div><div class="tt">Читать вместе</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#127912;</div><div class="tt">Рисовать/творить</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#128137;</div><div class="tt">Уход за собой</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#127911;</div><div class="tt">Музыка/подкаст</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#128663;</div><div class="tt">Поездка/вылазка</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#127834;</div><div class="tt">Ужин в ресторане</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#128171;</div><div class="tt">Массаж друг другу</div></div>
+<div class="tcard" onclick="pickIdea(this)"><div class="ti">&#127776;</div><div class="tt">Смотреть звёзды</div></div>
 </div>
 </div>
 <div class="card">
@@ -557,6 +588,38 @@ canvas{width:100%!important;height:200px!important}
 
 </div><!-- /app -->
 
+<!-- MODAL: Edit Tasks -->
+<div class="modal-bg" id="modal-tasks"><div class="modal-box">
+<h3>Редактировать задачи <span class="close-btn" onclick="closeModal('modal-tasks')">&#10005;</span></h3>
+<div id="edit-tasks-list"></div>
+<div class="add-row"><input type="text" id="new-task-input" placeholder="Новая задача..."><button onclick="addCustomTask()">+</button></div>
+</div></div>
+
+<!-- MODAL: Edit Schedule -->
+<div class="modal-bg" id="modal-schedule"><div class="modal-box">
+<h3>Редактировать расписание <span class="close-btn" onclick="closeModal('modal-schedule')">&#10005;</span></h3>
+<div id="edit-schedule-list"></div>
+<div class="add-row">
+<input type="time" id="new-sch-time" style="max-width:90px">
+<input type="text" id="new-sch-text" placeholder="Событие...">
+<select id="new-sch-tag" style="padding:8px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--bg);font-size:12px;color:var(--text)">
+<option value="rest">утро/сон</option><option value="sport">спорт</option><option value="food">еда</option><option value="work">работа</option><option value="love">Таня</option>
+</select>
+<button onclick="addScheduleItem()">+</button>
+</div>
+</div></div>
+
+<!-- MODAL: Edit Products -->
+<div class="modal-bg" id="modal-products"><div class="modal-box">
+<h3>Редактировать продукты <span class="close-btn" onclick="closeModal('modal-products')">&#10005;</span></h3>
+<div id="edit-products-list"></div>
+<div class="add-row">
+<input type="text" id="new-prod-name" placeholder="Продукт...">
+<input type="text" id="new-prod-qty" placeholder="Кол-во" style="max-width:80px">
+<button onclick="addProductItem()">+</button>
+</div>
+</div></div>
+
 <!-- CHAT FAB -->
 <button class="chat-fab" onclick="openChat()">&#128172;</button>
 
@@ -584,9 +647,10 @@ canvas{width:100%!important;height:200px!important}
 <button class="nb" data-idx="2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>Спорт</button>
 <button class="nb" data-idx="3"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Ккал</button>
 <button class="nb" data-idx="4"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>Вода</button>
-<button class="nb" data-idx="5"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Графики</button>
-<button class="nb" data-idx="6"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Таня</button>
-<button class="nb" data-idx="7"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Заметки</button>
+<button class="nb" data-idx="5"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>Покупки</button>
+<button class="nb" data-idx="6"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Графики</button>
+<button class="nb" data-idx="7"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Таня</button>
+<button class="nb" data-idx="8"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Заметки</button>
 </div>
 </nav>
 
@@ -808,7 +872,7 @@ function updateAll(){
   document.getElementById('s-week-loss').textContent=wf.length?(w[wf[wf.length-1]]-cw).toFixed(1):'-';
   var d=new Date(),dn=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],mn=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
   document.getElementById('top-date').textContent=dn[d.getDay()]+', '+d.getDate()+' '+mn[d.getMonth()]+' · День '+days;
-  loadChecks();updateTanyaStats();updateWeightHistory();updateCalories();updateWater();loadNotes();drawWeightChart();
+  renderTasks();renderSchedule();renderProducts();updateTanyaStats();updateWeightHistory();updateCalories();updateWater();loadNotes();drawWeightChart();
   var t=gs('tanya',{});if(t[todayKey()])document.querySelectorAll('.tcard').forEach(function(el){if(el.querySelector('.tt').textContent===t[todayKey()])el.classList.add('picked')});
 }
 
@@ -830,7 +894,7 @@ function toggleTheme(){
 initTheme();
 
 // ========== AUTO UPDATE ==========
-var APP_VERSION='1.5'; // current version — must match latest release tag
+var APP_VERSION='1.6'; // current version — must match latest release tag
 var GH_API='https://api.github.com/repos/Efimo/tracker/releases/latest';
 var _updateData=null;
 
@@ -885,6 +949,135 @@ function downloadUpdate(){
     btn.textContent='Скачайте файл из браузера';
     btn.style.opacity='1';
   },2000);
+}
+
+// ========== MODAL HELPERS ==========
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-bg').forEach(function(m){m.addEventListener('click',function(e){if(e.target===m)m.classList.remove('open')})});
+
+// ========== EDITABLE TASKS ==========
+var DEFAULT_TASKS=['Выпить 2.5л воды','Утренняя тренировка','Прогулка 30 мин','Питание \u22641800 ккал','Без сладкого/фастфуда','Время с Таней (1 час)','Лечь до 22:30','Взвеситься утром'];
+function getTaskList(){return gs('task_list',DEFAULT_TASKS)}
+function renderTasks(){
+  var tasks=getTaskList(),c=getChecks(),h='';
+  tasks.forEach(function(t,i){
+    var done=c['task_'+i]?'done':'';
+    h+='<div class="chk '+done+'" onclick="toggleTask(this,'+i+')" data-key="task_'+i+'"><div class="chk-b"></div><div class="chk-t">'+t+'</div></div>';
+  });
+  document.getElementById('daily-tasks').innerHTML=h;
+  updateTasksProgress();
+}
+function toggleTask(el,idx){
+  el.classList.toggle('done');var c=getChecks();c['task_'+idx]=el.classList.contains('done');setChecks(c);updateTasksProgress();
+}
+function updateTasksProgress(){
+  var tasks=document.querySelectorAll('#daily-tasks .chk'),done=document.querySelectorAll('#daily-tasks .chk.done').length;
+  var total=tasks.length;
+  document.getElementById('tasks-progress').style.width=total?Math.round(done/total*100)+'%':'0%';
+  document.getElementById('tasks-done').textContent=done;
+  document.getElementById('tasks-total').textContent=total;
+}
+function openEditTasks(){
+  var tasks=getTaskList(),h='';
+  tasks.forEach(function(t,i){
+    h+='<div class="modal-item"><input value="'+t.replace(/"/g,'&quot;')+'" onchange="editTask('+i+',this.value)"><button class="del-btn" onclick="deleteTask('+i+')">&#10005;</button></div>';
+  });
+  document.getElementById('edit-tasks-list').innerHTML=h;
+  openModal('modal-tasks');
+}
+function editTask(i,val){var t=getTaskList();t[i]=val;ss('task_list',t);renderTasks()}
+function deleteTask(i){var t=getTaskList();t.splice(i,1);ss('task_list',t);openEditTasks();renderTasks()}
+function addCustomTask(){
+  var inp=document.getElementById('new-task-input'),val=inp.value.trim();if(!val)return;
+  var t=getTaskList();t.push(val);ss('task_list',t);inp.value='';openEditTasks();renderTasks();
+}
+
+// ========== EDITABLE SCHEDULE ==========
+var DEFAULT_SCHEDULE=[
+  {time:'06:30',text:'Подъём, стакан воды',tag:'rest'},
+  {time:'07:00',text:'Тренировка 40 мин',tag:'sport'},
+  {time:'07:45',text:'Душ + завтрак',tag:'food'},
+  {time:'09:00',text:'Работа',tag:'work'},
+  {time:'13:00',text:'Обед',tag:'food'},
+  {time:'18:00',text:'Прогулка 30 мин',tag:'sport'},
+  {time:'18:45',text:'Ужин',tag:'food'},
+  {time:'19:30',text:'Время с Таней',tag:'love'},
+  {time:'22:30',text:'Сон (8 часов)',tag:'rest'}
+];
+var TAG_LABELS={rest:'утро',sport:'спорт',food:'еда',work:'работа',love:'Таня'};
+var TAG_CSS={rest:'tag-rest',sport:'tag-sport',food:'tag-food',work:'tag-work',love:'tag-love'};
+function getSchedule(){return gs('schedule',DEFAULT_SCHEDULE)}
+function renderSchedule(){
+  var sch=getSchedule(),h='';
+  sch.forEach(function(s){
+    var parts=s.time.split(':'),hour=parseInt(parts[0])+parseInt(parts[1])/60;
+    h+='<div class="sch" data-hour="'+hour+'"><span class="sch-t">'+s.time+'</span><span class="sch-txt">'+s.text+'</span><span class="tag '+(TAG_CSS[s.tag]||'tag-rest')+'">'+(TAG_LABELS[s.tag]||s.tag)+'</span></div>';
+  });
+  document.getElementById('schedule-list').innerHTML=h;
+  updateScheduleHighlight();
+}
+function openEditSchedule(){
+  var sch=getSchedule(),h='';
+  sch.forEach(function(s,i){
+    h+='<div class="modal-item"><input type="time" value="'+s.time+'" style="max-width:80px" onchange="editSchTime('+i+',this.value)"><input value="'+s.text.replace(/"/g,'&quot;')+'" onchange="editSchText('+i+',this.value)"><button class="del-btn" onclick="deleteSchItem('+i+')">&#10005;</button></div>';
+  });
+  document.getElementById('edit-schedule-list').innerHTML=h;
+  openModal('modal-schedule');
+}
+function editSchTime(i,val){var s=getSchedule();s[i].time=val;s.sort(function(a,b){return a.time.localeCompare(b.time)});ss('schedule',s);openEditSchedule();renderSchedule()}
+function editSchText(i,val){var s=getSchedule();s[i].text=val;ss('schedule',s);renderSchedule()}
+function deleteSchItem(i){var s=getSchedule();s.splice(i,1);ss('schedule',s);openEditSchedule();renderSchedule()}
+function addScheduleItem(){
+  var time=document.getElementById('new-sch-time').value,text=document.getElementById('new-sch-text').value.trim(),tag=document.getElementById('new-sch-tag').value;
+  if(!time||!text)return;
+  var s=getSchedule();s.push({time:time,text:text,tag:tag});s.sort(function(a,b){return a.time.localeCompare(b.time)});
+  ss('schedule',s);document.getElementById('new-sch-text').value='';openEditSchedule();renderSchedule();
+}
+
+// ========== PRODUCTS LIST ==========
+var DEFAULT_PRODUCTS=[
+  {name:'Куриная грудка/филе',qty:'1.5 кг'},{name:'Куриные бёдра',qty:'400 г'},{name:'Куриная печень',qty:'400 г'},
+  {name:'Рыба (минтай/хек)',qty:'600 г'},{name:'Скумбрия',qty:'200 г'},{name:'Тунец консервированный',qty:'2 банки'},
+  {name:'Говядина',qty:'300 г'},{name:'Творог 2-5%',qty:'1.5 кг'},{name:'Яйца',qty:'20 шт'},
+  {name:'Кефир/ряженка',qty:'2 л'},{name:'Молоко 1.5%',qty:'0.5 л'},{name:'Сметана 10%',qty:'200 г'},
+  {name:'Гречка',qty:'500 г'},{name:'Рис',qty:'300 г'},{name:'Овсянка',qty:'250 г'},
+  {name:'Картофель',qty:'1 кг'},{name:'Капуста',qty:'1 кочан'},{name:'Морковь',qty:'500 г'},
+  {name:'Огурцы',qty:'1 кг'},{name:'Помидоры',qty:'1 кг'},{name:'Яблоки',qty:'500 г'},
+  {name:'Бананы',qty:'3 шт'},{name:'Масло растительное',qty:'200 мл'},{name:'Хлеб чёрный',qty:'1 шт'}
+];
+function getProducts(){return gs('products',DEFAULT_PRODUCTS)}
+function getProductChecks(){return gs('prod_checks_'+getWeekKey(),{})}
+function setProductChecks(c){ss('prod_checks_'+getWeekKey(),c)}
+function getWeekKey(){var d=new Date(),day=d.getDay()||7;d.setDate(d.getDate()-day+1);return d.toISOString().slice(0,10)}
+function renderProducts(){
+  var prods=getProducts(),checks=getProductChecks(),h='',bought=0;
+  prods.forEach(function(p,i){
+    var done=checks[i]?'bought':'';
+    h+='<div class="prod-item '+done+'" onclick="toggleProd('+i+')"><div class="prod-check"></div><span class="prod-name">'+p.name+'</span><span class="prod-qty">'+p.qty+'</span></div>';
+    if(checks[i])bought++;
+  });
+  document.getElementById('products-list').innerHTML=h;
+  document.getElementById('prod-left').textContent=prods.length-bought;
+  document.getElementById('prod-total').textContent=prods.length;
+}
+function toggleProd(i){var c=getProductChecks();c[i]=!c[i];setProductChecks(c);renderProducts()}
+function openEditProducts(){
+  var prods=getProducts(),h='';
+  prods.forEach(function(p,i){
+    h+='<div class="modal-item"><input value="'+p.name.replace(/"/g,'&quot;')+'" onchange="editProdName('+i+',this.value)" style="flex:2"><input value="'+p.qty.replace(/"/g,'&quot;')+'" onchange="editProdQty('+i+',this.value)" style="max-width:80px"><button class="del-btn" onclick="deleteProd('+i+')">&#10005;</button></div>';
+  });
+  document.getElementById('edit-products-list').innerHTML=h;
+  openModal('modal-products');
+}
+function editProdName(i,val){var p=getProducts();p[i].name=val;ss('products',p);renderProducts()}
+function editProdQty(i,val){var p=getProducts();p[i].qty=val;ss('products',p);renderProducts()}
+function deleteProd(i){var p=getProducts();p.splice(i,1);ss('products',p);openEditProducts();renderProducts()}
+function addProductItem(){
+  var name=document.getElementById('new-prod-name').value.trim(),qty=document.getElementById('new-prod-qty').value.trim()||'';
+  if(!name)return;var p=getProducts();p.push({name:name,qty:qty});ss('products',p);
+  document.getElementById('new-prod-name').value='';document.getElementById('new-prod-qty').value='';
+  openEditProducts();renderProducts();
 }
 
 // ========== SCHEDULE HIGHLIGHT ==========
