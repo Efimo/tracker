@@ -2,13 +2,17 @@ package com.stepan.tracker;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.DownloadManager;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.content.Context;
+import android.content.Intent;
+import android.app.DownloadManager;
+import android.net.Uri;
 import android.os.Environment;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,13 +25,22 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import androidx.core.content.FileProvider;
-
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends Activity {
 
     private WebView webView;
+    private static final String REMOTE_URL = "https://raw.githubusercontent.com/Efimo/tracker/main/docs/index.html";
+    private static final String CACHE_FILE = "tracker_cache.html";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -39,7 +52,6 @@ public class MainActivity extends Activity {
         window.setStatusBarColor(Color.parseColor("#f5f5fa"));
         window.setNavigationBarColor(Color.parseColor("#ffffff"));
 
-        // Light status bar icons (dark icons on light background)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.getDecorView().setSystemUiVisibility(
                 android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
@@ -78,23 +90,19 @@ public class MainActivity extends Activity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                // API calls — stay in WebView
                 if (url.contains("jsonbin.io") || url.contains("openai.com") || url.contains("api.github.com")) {
                     return false;
                 }
-                // GitHub releases / APK downloads — open in system browser
                 if (url.contains("github.com/") || url.contains("githubusercontent.com") || url.endsWith(".apk")) {
                     try {
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     } catch (Exception e) {
-                        // fallback
                         view.loadUrl(url);
                     }
                     return true;
                 }
-                // Everything else in WebView
                 view.loadUrl(url);
                 return true;
             }
@@ -102,7 +110,6 @@ public class MainActivity extends Activity {
 
         webView.setWebChromeClient(new WebChromeClient());
 
-        // Handle file downloads (APK updates)
         webView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
@@ -113,30 +120,118 @@ public class MainActivity extends Activity {
                     request.setDescription("Скачивание " + filename);
                     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                     request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
-                    request.setMimeType("application/vnd.android.package-archive");
-
                     DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
                     dm.enqueue(request);
-
-                    Toast.makeText(MainActivity.this, "Скачивание обновления...", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Скачивание...", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
-                    // Fallback: open in browser
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(intent);
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                 }
             }
         });
 
         webView.setBackgroundColor(Color.parseColor("#f5f5fa"));
-        webView.loadUrl("file:///android_asset/tracker.html");
 
         // Setup notifications
         NotificationHelper.createChannel(this);
         NotificationHelper.scheduleAll(this);
-
-        // Request notification permission (Android 13+)
         if (Build.VERSION.SDK_INT >= 33) {
             requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, 1);
+        }
+
+        // Load: try remote first, then cache, then assets
+        loadTracker();
+    }
+
+    private void loadTracker() {
+        // First show cached/assets immediately for fast start
+        String cached = readCache();
+        if (cached != null) {
+            webView.loadDataWithBaseURL("file:///android_asset/", cached, "text/html", "UTF-8", null);
+        } else {
+            webView.loadUrl("file:///android_asset/tracker.html");
+        }
+
+        // Then fetch fresh version in background
+        if (isOnline()) {
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Handler handler = new Handler(Looper.getMainLooper());
+            executor.execute(() -> {
+                String html = fetchRemote();
+                if (html != null && html.length() > 1000) {
+                    saveCache(html);
+                    handler.post(() -> {
+                        // Check if content changed
+                        String oldCached = cached;
+                        if (oldCached == null || !oldCached.equals(html)) {
+                            webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    private boolean isOnline() {
+        try {
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo info = cm.getActiveNetworkInfo();
+            return info != null && info.isConnected();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private String fetchRemote() {
+        try {
+            URL url = new URL(REMOTE_URL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(10000);
+            conn.setRequestMethod("GET");
+
+            int code = conn.getResponseCode();
+            if (code != 200) return null;
+
+            InputStream is = conn.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            reader.close();
+            conn.disconnect();
+            return sb.toString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private void saveCache(String html) {
+        try {
+            FileOutputStream fos = openFileOutput(CACHE_FILE, Context.MODE_PRIVATE);
+            fos.write(html.getBytes("UTF-8"));
+            fos.close();
+        } catch (Exception e) {
+            // ignore
+        }
+    }
+
+    private String readCache() {
+        try {
+            File f = new File(getFilesDir(), CACHE_FILE);
+            if (!f.exists()) return null;
+            FileInputStream fis = new FileInputStream(f);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            reader.close();
+            return sb.toString();
+        } catch (Exception e) {
+            return null;
         }
     }
 
