@@ -1,7 +1,6 @@
 {
-  "version": 2,
-  "versionName": "1.1",
-  "changelog": "Светлый дизайн, свайп-навигация, AI-ассистент, автообновление",
-  "apkUrl": "https://github.com/Efimo/tracker/releases/download/v1.1/StepanTracker.apk",
+  "version": 3,
+  "versionName": "1.2",
+  "changelog": "Исправлен адаптив для мобильных. Переключатель темы светлая/тёмная.",
   "date": "2026-04-06"
 }
