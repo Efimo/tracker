@@ -49,8 +49,8 @@ public class MainActivity extends Activity {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         Window window = getWindow();
-        window.setStatusBarColor(Color.parseColor("#0C0C0E"));
-        window.setNavigationBarColor(Color.parseColor("#0C0C0E"));
+        window.setStatusBarColor(Color.parseColor("#08080C"));
+        window.setNavigationBarColor(Color.parseColor("#08080C"));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.getDecorView().setSystemUiVisibility(
@@ -128,7 +128,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        webView.setBackgroundColor(Color.parseColor("#0C0C0E"));
+        webView.setBackgroundColor(Color.parseColor("#08080C"));
 
         // Setup notifications
         NotificationHelper.createChannel(this);
@@ -141,13 +141,25 @@ public class MainActivity extends Activity {
         loadTracker();
     }
 
+    private static final String BASE_URL = "https://tracker-5c832.firebaseapp.com/";
+
     private void loadTracker() {
         // First show cached/assets immediately for fast start
         String cached = readCache();
         if (cached != null) {
-            webView.loadDataWithBaseURL("file:///android_asset/", cached, "text/html", "UTF-8", null);
+            webView.loadDataWithBaseURL(BASE_URL, cached, "text/html", "UTF-8", null);
         } else {
-            webView.loadUrl("file:///android_asset/tracker.html");
+            try {
+                InputStream is = getAssets().open("tracker.html");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) sb.append(line).append("\n");
+                reader.close();
+                webView.loadDataWithBaseURL(BASE_URL, sb.toString(), "text/html", "UTF-8", null);
+            } catch (Exception e) {
+                webView.loadUrl("file:///android_asset/tracker.html");
+            }
         }
 
         // Then fetch fresh version in background
@@ -159,10 +171,9 @@ public class MainActivity extends Activity {
                 if (html != null && html.length() > 1000) {
                     saveCache(html);
                     handler.post(() -> {
-                        // Check if content changed
                         String oldCached = cached;
                         if (oldCached == null || !oldCached.equals(html)) {
-                            webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null);
+                            webView.loadDataWithBaseURL(BASE_URL, html, "text/html", "UTF-8", null);
                         }
                     });
                 }
