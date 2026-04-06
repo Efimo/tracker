@@ -49,13 +49,12 @@ public class MainActivity extends Activity {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         Window window = getWindow();
-        window.setStatusBarColor(Color.parseColor("#f5f5fa"));
-        window.setNavigationBarColor(Color.parseColor("#ffffff"));
+        window.setStatusBarColor(Color.parseColor("#0C0C0E"));
+        window.setNavigationBarColor(Color.parseColor("#0C0C0E"));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.getDecorView().setSystemUiVisibility(
-                android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
-                android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+                0  // dark theme — light icons on dark background
             );
         }
 
@@ -129,7 +128,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        webView.setBackgroundColor(Color.parseColor("#f5f5fa"));
+        webView.setBackgroundColor(Color.parseColor("#0C0C0E"));
 
         // Setup notifications
         NotificationHelper.createChannel(this);
