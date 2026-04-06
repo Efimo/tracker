@@ -271,6 +271,11 @@ canvas{width:100%!important;height:200px!important}
 .nb{font-size:8px;min-width:36px;padding:4px 0}
 .nb svg{width:16px;height:16px}
 }
+/* Schedule highlight */
+.sch.now{background:var(--accent-bg);border-radius:var(--radius-xs);margin:0 -8px;padding:10px 8px}
+.sch.now .sch-t{color:var(--accent)}
+.sch.past .sch-txt{color:var(--dim);text-decoration:line-through}
+.sch.past .sch-t{color:var(--dim)}
 .day-menu,.phase-content{display:none}.day-menu.active,.phase-content.active{display:block}
 
 /* === UPDATE BANNER === */
@@ -320,7 +325,7 @@ canvas{width:100%!important;height:200px!important}
 <div class="avatar">&#1057;</div>
 <div class="topbar-info">
 <div class="name">Степан</div>
-<div class="date" id="top-date"></div>
+<div class="date"><span id="top-date"></span> · <span id="live-clock" style="color:var(--accent);font-weight:700"></span></div>
 </div>
 </div>
 <div class="topbar-actions">
@@ -367,17 +372,30 @@ canvas{width:100%!important;height:200px!important}
 
 <!-- PAGE: ДЕНЬ -->
 <div class="swipe-page" data-tab="day">
+<!-- Next reminder -->
+<div class="card" id="next-reminder" style="border-left:3px solid var(--accent);display:none">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="font-size:24px" id="nr-icon">&#128276;</div>
+<div style="flex:1">
+<div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Следующее напоминание</div>
+<div style="font-size:14px;font-weight:800;color:var(--text);margin-top:2px" id="nr-title"></div>
+<div style="font-size:11px;color:var(--text2);margin-top:2px;font-weight:500" id="nr-msg"></div>
+</div>
+<div style="font-size:16px;font-weight:900;color:var(--accent)" id="nr-time"></div>
+</div>
+</div>
+
 <div class="card">
-<div class="card-title"><span class="em">&#128197;</span> Распорядок</div>
-<div class="sch"><span class="sch-t">06:30</span><span class="sch-txt">Подъём, стакан воды</span><span class="tag tag-rest">утро</span></div>
-<div class="sch"><span class="sch-t">07:00</span><span class="sch-txt">Тренировка 40 мин</span><span class="tag tag-sport">спорт</span></div>
-<div class="sch"><span class="sch-t">07:45</span><span class="sch-txt">Душ + завтрак</span><span class="tag tag-food">еда</span></div>
-<div class="sch"><span class="sch-t">09:00</span><span class="sch-txt">Работа</span><span class="tag tag-work">работа</span></div>
-<div class="sch"><span class="sch-t">13:00</span><span class="sch-txt">Обед</span><span class="tag tag-food">еда</span></div>
-<div class="sch"><span class="sch-t">18:00</span><span class="sch-txt">Прогулка 30 мин</span><span class="tag tag-sport">спорт</span></div>
-<div class="sch"><span class="sch-t">18:45</span><span class="sch-txt">Ужин</span><span class="tag tag-food">еда</span></div>
-<div class="sch"><span class="sch-t">19:30</span><span class="sch-txt">Время с Таней</span><span class="tag tag-love">Таня</span></div>
-<div class="sch"><span class="sch-t">22:30</span><span class="sch-txt">Сон (8 часов)</span><span class="tag tag-rest">сон</span></div>
+<div class="card-title"><span class="em">&#128197;</span> Распорядок <span style="font-size:10px;color:var(--text3);font-weight:500;margin-left:auto">&#128276; = напоминание за 10 мин</span></div>
+<div class="sch" data-hour="6.5"><span class="sch-t">06:30</span><span class="sch-txt">Подъём, стакан воды</span><span class="tag tag-rest">утро</span></div>
+<div class="sch" data-hour="7"><span class="sch-t">07:00</span><span class="sch-txt">Тренировка 40 мин</span><span class="tag tag-sport">спорт</span></div>
+<div class="sch" data-hour="7.75"><span class="sch-t">07:45</span><span class="sch-txt">Душ + завтрак</span><span class="tag tag-food">еда</span></div>
+<div class="sch" data-hour="9"><span class="sch-t">09:00</span><span class="sch-txt">Работа</span><span class="tag tag-work">работа</span></div>
+<div class="sch" data-hour="13"><span class="sch-t">13:00</span><span class="sch-txt">Обед</span><span class="tag tag-food">еда</span></div>
+<div class="sch" data-hour="18"><span class="sch-t">18:00</span><span class="sch-txt">Прогулка 30 мин</span><span class="tag tag-sport">спорт</span></div>
+<div class="sch" data-hour="18.75"><span class="sch-t">18:45</span><span class="sch-txt">Ужин</span><span class="tag tag-food">еда</span></div>
+<div class="sch" data-hour="19.5"><span class="sch-t">19:30</span><span class="sch-txt">Время с Таней</span><span class="tag tag-love">Таня</span></div>
+<div class="sch" data-hour="22.5"><span class="sch-t">22:30</span><span class="sch-txt">Сон (8 часов)</span><span class="tag tag-rest">сон</span></div>
 </div>
 <div class="card">
 <div class="card-title"><span class="em">&#9989;</span> Задачи</div>
@@ -812,7 +830,7 @@ function toggleTheme(){
 initTheme();
 
 // ========== AUTO UPDATE ==========
-var APP_VERSION='1.4'; // current version — must match latest release tag
+var APP_VERSION='1.5'; // current version — must match latest release tag
 var GH_API='https://api.github.com/repos/Efimo/tracker/releases/latest';
 var _updateData=null;
 
@@ -868,6 +886,54 @@ function downloadUpdate(){
     btn.style.opacity='1';
   },2000);
 }
+
+// ========== SCHEDULE HIGHLIGHT ==========
+var REMINDERS=[
+  {h:6,m:25,title:'Доброе утро!',msg:'Пора вставать. Стакан воды с лимоном'},
+  {h:6,m:50,title:'Тренировка через 10 мин!',msg:'Подготовь коврик'},
+  {h:7,m:40,title:'Время завтрака',msg:'Творог + банан = 430 ккал'},
+  {h:11,m:0,title:'Перекус!',msg:'Яблоко + орехи. Не забудь воду'},
+  {h:12,m:50,title:'Обед через 10 мин',msg:'Грудка + гречка + салат'},
+  {h:16,m:0,title:'Перекус: творог',msg:'150г творога. Выпей воду'},
+  {h:17,m:50,title:'Конец работы через 10 мин!',msg:'Впереди прогулка 30 мин'},
+  {h:18,m:35,title:'Скоро ужин',msg:'Рыба + овощи = 490 ккал'},
+  {h:19,m:25,title:'Время с Таней!',msg:'Отложи телефон. Мин. 1 час вместе'},
+  {h:21,m:30,title:'До сна — 1 час',msg:'Заверши дела, отложи экраны'},
+  {h:22,m:0,title:'Вечерний чек-лист',msg:'Запиши вес, отметь задачи'},
+  {h:22,m:25,title:'Пора спать!',msg:'8 часов сна = жиросжигание'}
+];
+function updateScheduleHighlight(){
+  var now=new Date(),curH=now.getHours()+now.getMinutes()/60;
+  // Highlight schedule items
+  document.querySelectorAll('.sch[data-hour]').forEach(function(el){
+    var h=parseFloat(el.dataset.hour);
+    el.classList.remove('now','past');
+    if(h<curH-0.5)el.classList.add('past');
+    else if(Math.abs(h-curH)<0.5)el.classList.add('now');
+  });
+  // Next reminder
+  var next=null;
+  for(var i=0;i<REMINDERS.length;i++){
+    var rh=REMINDERS[i].h+REMINDERS[i].m/60;
+    if(rh>curH){next=REMINDERS[i];break}
+  }
+  var box=document.getElementById('next-reminder');
+  if(next){
+    box.style.display='block';
+    document.getElementById('nr-title').textContent=next.title;
+    document.getElementById('nr-msg').textContent=next.msg;
+    document.getElementById('nr-time').textContent=(next.h<10?'0':'')+next.h+':'+(next.m<10?'0':'')+next.m;
+  } else {
+    box.style.display='none';
+  }
+}
+
+// ========== LIVE CLOCK ==========
+function tickClock(){
+  var d=new Date(),h=d.getHours(),m=d.getMinutes();
+  document.getElementById('live-clock').textContent=(h<10?'0':'')+h+':'+(m<10?'0':'')+m;
+}
+tickClock();updateScheduleHighlight();setInterval(function(){tickClock();updateScheduleHighlight()},30000);
 
 // ========== INIT ==========
 initWater();initSwipe();updateAll();

@@ -129,6 +129,15 @@ public class MainActivity extends Activity {
 
         webView.setBackgroundColor(Color.parseColor("#f5f5fa"));
         webView.loadUrl("file:///android_asset/tracker.html");
+
+        // Setup notifications
+        NotificationHelper.createChannel(this);
+        NotificationHelper.scheduleAll(this);
+
+        // Request notification permission (Android 13+)
+        if (Build.VERSION.SDK_INT >= 33) {
+            requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, 1);
+        }
     }
 
     @Override
