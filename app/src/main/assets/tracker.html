@@ -843,45 +843,16 @@ function dismissUpdate(){
 }
 
 function downloadUpdate(){
-  if(!_updateData)return;
+  if(!_updateData||!_updateData.apkUrl)return;
   var btn=document.getElementById('update-btn');
-  btn.textContent='Скачивание...';
+  btn.textContent='Открываю скачивание...';
   btn.style.opacity='0.6';
-  var prog=document.getElementById('update-progress');
-  prog.style.display='block';
-
-  // For WebView (APK) — open download link in system browser
-  var isApp=navigator.userAgent.indexOf('StepanTrackerApp')!==-1;
-
-  if(isApp){
-    // In Android WebView — trigger system download
-    document.getElementById('up-fill').style.width='50%';
-    var a=document.createElement('a');
-    a.href=_updateData.apkUrl;
-    a.download='StepanTracker.apk';
-    // Try direct download
-    fetch(_updateData.apkUrl).then(function(r){return r.blob()}).then(function(blob){
-      document.getElementById('up-fill').style.width='90%';
-      var url=URL.createObjectURL(blob);
-      var a2=document.createElement('a');
-      a2.href=url;a2.download='StepanTracker-v'+_updateData.versionName+'.apk';
-      document.body.appendChild(a2);a2.click();document.body.removeChild(a2);
-      setTimeout(function(){URL.revokeObjectURL(url)},5000);
-      document.getElementById('up-fill').style.width='100%';
-      btn.textContent='Скачано! Установите файл';
-      btn.style.opacity='1';
-    }).catch(function(){
-      // Fallback: open in browser
-      window.open(_updateData.apkUrl,'_system');
-      btn.textContent='Открываю загрузку...';
-      btn.style.opacity='1';
-    });
-  } else {
-    // Web version — just reload from new source
-    document.getElementById('up-fill').style.width='100%';
-    btn.textContent='Обновляю...';
-    setTimeout(function(){location.reload(true)},1000);
-  }
+  // Simply navigate to APK URL — Android DownloadManager handles it
+  window.location.href=_updateData.apkUrl;
+  setTimeout(function(){
+    btn.textContent='Проверьте уведомления \u2193';
+    btn.style.opacity='1';
+  },2000);
 }
 
 // ========== INIT ==========
