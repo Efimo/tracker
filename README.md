@@ -1,4 +1,10 @@
-# Трекер Степана — Android + Web
+# Трекер Степана — 114 → 80 кг
+
+## [⬇️ СКАЧАТЬ APK](https://raw.githubusercontent.com/Efimo/tracker/main/StepanTracker.apk)
+
+> Нажми на ссылку выше → скачается файл → установи на Android
+
+---
 
 ## Структура проекта
 
