@@ -62,21 +62,21 @@
 
 /* ── Semantic Tokens: Light Theme ── */
 html[data-theme="light"]{
-  --bg:#F5F3EF;
-  --surface-1:rgba(0,0,0,.02);--surface-2:rgba(0,0,0,.04);--surface-3:rgba(0,0,0,.06);
-  --card:rgba(255,255,255,.8);--card-hover:rgba(255,255,255,.95);
+  --bg:#F7F7F8;
+  --surface-1:rgba(0,0,0,.02);--surface-2:rgba(0,0,0,.03);--surface-3:rgba(0,0,0,.05);
+  --card:rgba(255,255,255,.9);--card-hover:rgba(255,255,255,1);
   --border:rgba(0,0,0,.06);--border2:rgba(0,0,0,.1);
-  --text:#18181B;--text2:#71717A;--text3:#A1A1AA;
-  --accent:#B8860B;--accent2:#996B08;--accent-dim:rgba(184,134,11,.06);--accent-glow:rgba(184,134,11,.12);
-  --red:#DC2626;--red-dim:rgba(220,38,38,.06);
-  --orange:#D97706;--orange-dim:rgba(217,119,6,.06);
-  --blue:#3B82F6;--blue-dim:rgba(59,130,246,.06);
-  --pink:#EC4899;--pink-dim:rgba(236,72,153,.06);
-  --nav-bg:rgba(245,243,239,.9);
+  --text:#1A1A2E;--text2:#64648C;--text3:#A0A0B8;
+  --accent:#6C5CE7;--accent2:#5A4BD1;--accent-dim:rgba(108,92,231,.06);--accent-glow:rgba(108,92,231,.15);
+  --red:#E53E3E;--red-dim:rgba(229,62,62,.06);
+  --orange:#E67E22;--orange-dim:rgba(230,126,34,.06);
+  --blue:#4F87F6;--blue-dim:rgba(79,135,246,.06);
+  --pink:#E84393;--pink-dim:rgba(232,67,147,.06);
+  --nav-bg:rgba(247,247,248,.92);
   --ring-track:rgba(0,0,0,.04);
-  --shadow:0 4px 20px rgba(0,0,0,.05);
-  --glass:rgba(255,255,255,.6);--glass-border:rgba(0,0,0,.06);
-  --grad1:#B8860B;--grad2:#D97706;--grad3:#92400E;
+  --shadow:0 4px 24px rgba(108,92,231,.08);
+  --glass:rgba(255,255,255,.7);--glass-border:rgba(108,92,231,.08);
+  --grad1:#6C5CE7;--grad2:#8B7CF6;--grad3:#5A4BD1;
   --skeleton:rgba(0,0,0,.04);--skeleton-shine:rgba(0,0,0,.06);
 }
 
@@ -581,6 +581,83 @@ canvas{width:100%!important;height:220px!important}
   box-shadow:0 4px 12px var(--accent-glow);
 }
 
+/* ══════ ONBOARDING ══════ */
+.onb-bg{position:fixed;inset:0;background:var(--bg);z-index:350;display:flex;align-items:center;justify-content:center;padding:var(--sp-xl)}
+.onb-bg.hide{display:none}
+.onb{width:100%;max-width:380px;text-align:center}
+.onb-title{font-family:'Sora',sans-serif;font-size:var(--fs-2xl);font-weight:var(--fw-extrabold);margin-bottom:var(--sp-xs);color:var(--text)}
+.onb-sub{font-size:var(--fs-sm);color:var(--text3);margin-bottom:var(--sp-3xl)}
+.onb-step{display:none}.onb-step.active{display:block}
+.onb-label{text-align:left;font-size:var(--fs-sm);font-weight:var(--fw-semibold);color:var(--text2);margin-bottom:var(--sp-xs);margin-top:var(--sp-lg)}
+.onb input[type="text"],.onb input[type="number"]{
+  width:100%;padding:14px 16px;border-radius:var(--r-md);
+  border:1.5px solid var(--border2);background:var(--glass);
+  color:var(--text);font-size:var(--fs-md);font-family:'Manrope',sans-serif;
+  outline:none;text-align:center;font-weight:var(--fw-bold);transition:all var(--dur-short);
+}
+.onb input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.onb-methods{display:flex;flex-direction:column;gap:var(--sp-sm);margin-top:var(--sp-lg)}
+.onb-mcard{
+  background:var(--glass);border:1.5px solid var(--glass-border);border-radius:var(--r-xl);
+  padding:var(--sp-lg) var(--sp-xl);text-align:left;cursor:pointer;
+  transition:all var(--dur-short) var(--ease-out);
+}
+.onb-mcard:active{transform:scale(.98)}
+.onb-mcard.on{border-color:var(--accent);background:var(--accent-dim)}
+.onb-mcard .om-name{font-family:'Sora',sans-serif;font-size:var(--fs-base);font-weight:var(--fw-bold);color:var(--text);margin-bottom:2px}
+.onb-mcard .om-desc{font-size:var(--fs-xs);color:var(--text3)}
+.onb-nav{display:flex;gap:var(--sp-sm);margin-top:var(--sp-2xl)}
+.onb-nav button{
+  flex:1;padding:14px;border-radius:var(--r-md);border:none;
+  font-family:'Sora',sans-serif;font-size:var(--fs-base);font-weight:var(--fw-bold);
+  cursor:pointer;transition:all var(--dur-short);
+}
+.onb-nav .onb-next{
+  background:linear-gradient(135deg,var(--grad1),var(--grad3));color:#fff;
+  box-shadow:0 4px 16px var(--accent-glow);
+}
+.onb-nav .onb-back{background:var(--glass);color:var(--text2);border:1px solid var(--glass-border)}
+.onb-dots{display:flex;gap:6px;justify-content:center;margin-top:var(--sp-xl)}
+.onb-dots .od{width:8px;height:8px;border-radius:50%;background:var(--text3);opacity:.3;transition:all var(--dur-short)}
+.onb-dots .od.on{background:var(--accent);opacity:1;width:24px;border-radius:4px}
+
+/* ══════ METHOD TABS ══════ */
+.mtab{
+  padding:10px 18px;border-radius:var(--r-full);
+  border:1.5px solid var(--glass-border);background:var(--glass);
+  color:var(--text2);font-size:var(--fs-sm);font-weight:var(--fw-bold);
+  cursor:pointer;font-family:'Sora',sans-serif;transition:all var(--dur-short) var(--ease-out);
+  white-space:nowrap;
+}
+.mtab.on{
+  background:linear-gradient(135deg,var(--grad1),var(--grad3));color:#fff;
+  border-color:transparent;box-shadow:0 4px 16px var(--accent-glow);
+}
+.mtab:active{transform:scale(.95)}
+
+/* ══════ PRODUCT CARDS (rounded squircle) ══════ */
+.prod-grid{display:flex;flex-wrap:wrap;gap:var(--sp-sm)}
+.prod-card{
+  flex:1 1 calc(50% - var(--sp-sm));min-width:140px;
+  background:var(--glass);border:1.5px solid var(--glass-border);
+  border-radius:var(--r-xl);padding:var(--sp-md) var(--sp-lg);
+  cursor:pointer;transition:all var(--dur-short) var(--ease-out);
+  display:flex;align-items:center;gap:var(--sp-sm);
+}
+.prod-card:active{transform:scale(.97)}
+.prod-card.ok{border-color:var(--accent);background:var(--accent-dim)}
+.prod-card .pc-check{
+  width:22px;height:22px;border-radius:var(--r-sm);border:2px solid var(--text3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all var(--dur-short) var(--ease-spring);
+}
+.prod-card.ok .pc-check{background:linear-gradient(135deg,var(--grad1),var(--grad3));border-color:transparent}
+.prod-card.ok .pc-check::after{content:'\2713';color:#fff;font-size:12px;font-weight:800}
+.prod-card .pc-info{flex:1;min-width:0}
+.prod-card .pc-name{font-size:var(--fs-sm);font-weight:var(--fw-semibold);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prod-card .pc-qty{font-size:var(--fs-xs);color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px}
+.prod-card.ok .pc-name{text-decoration:line-through;color:var(--text3)}
+
 /* ══════ PROFILE MODAL ══════ */
 .prof-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:250;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .prof-bg.on{display:flex}
@@ -639,6 +716,37 @@ canvas{width:100%!important;height:220px!important}
 </style>
 </head>
 <body>
+
+<!-- ONBOARDING -->
+<div class="onb-bg hide" id="onboarding">
+<div class="onb">
+<div class="onb-step active" id="onb-s1">
+<div class="onb-title">Добро пожаловать!</div>
+<div class="onb-sub">Настроим трекер под тебя</div>
+<div class="onb-label">Твоё имя</div>
+<input type="text" id="onb-name" placeholder="Степан" value="">
+<div class="onb-label">Рост (см)</div>
+<input type="number" id="onb-height" placeholder="182" value="">
+<div class="onb-nav"><button class="onb-next" onclick="onbNext(1)">Далее</button></div>
+</div>
+<div class="onb-step" id="onb-s2">
+<div class="onb-title">Параметры</div>
+<div class="onb-sub">Укажи текущий и целевой вес</div>
+<div class="onb-label">Текущий вес (кг)</div>
+<input type="number" id="onb-weight" placeholder="90" step="0.1">
+<div class="onb-label">Целевой вес (кг)</div>
+<input type="number" id="onb-goal" placeholder="75" step="0.1">
+<div class="onb-nav"><button class="onb-back" onclick="onbBack(2)">Назад</button><button class="onb-next" onclick="onbNext(2)">Далее</button></div>
+</div>
+<div class="onb-step" id="onb-s3">
+<div class="onb-title">Методика</div>
+<div class="onb-sub">Выбери план питания</div>
+<div class="onb-methods" id="onb-methods"></div>
+<div class="onb-nav"><button class="onb-back" onclick="onbBack(3)">Назад</button><button class="onb-next" onclick="onbFinish()">Начать!</button></div>
+</div>
+<div class="onb-dots"><div class="od on"></div><div class="od"></div><div class="od"></div></div>
+</div>
+</div>
 
 <!-- AUTH SCREEN -->
 <div class="auth-screen" id="auth-screen">
@@ -744,16 +852,14 @@ canvas{width:100%!important;height:220px!important}
 </div>
 </div>
 
-<!-- 1: ПИТАНИЕ -->
+<!-- 1: МЕТОДИКА -->
 <div class="sw-p" data-tab="food">
-<div class="c" style="border-left:3px solid var(--accent)"><div class="ct"><span class="em">&#129504;</span> Методология</div>
-<div style="font-size:14px;color:var(--text2);line-height:2"><b style="color:var(--accent)">TDEE:</b> 2550 &rarr; дефицит 750 &rarr; <b style="color:var(--accent)">цель 1800 ккал</b><br><b style="color:var(--accent)">Б:</b> 160 г | <b style="color:var(--accent)">Ж:</b> 65 г | <b style="color:var(--accent)">У:</b> 144 г</div>
+<div class="c"><div class="ct"><span class="em">&#9881;</span> Методика питания</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="method-tabs"></div>
+<div id="method-info"></div>
 </div>
-<div class="c"><div class="ct"><span class="em">&#127869;</span> Меню дня</div>
-<div class="ml-g"><div class="ml-h">&#127749; Завтрак &mdash; 430</div><div class="ml-r"><span>Творог 5% &mdash; 200 г</span><span class="ml-k">230</span></div><div class="ml-r"><span>Банан</span><span class="ml-k">105</span></div></div>
-<div class="ml-g"><div class="ml-h">&#127858; Обед &mdash; 540</div><div class="ml-r"><span>Грудка &mdash; 180 г</span><span class="ml-k">300</span></div><div class="ml-r"><span>Гречка &mdash; 150 г</span><span class="ml-k">165</span></div><div class="ml-r"><span>Салат</span><span class="ml-k">65</span></div></div>
-<div class="ml-g"><div class="ml-h">&#127769; Ужин &mdash; 490</div><div class="ml-r"><span>Минтай &mdash; 200 г</span><span class="ml-k">160</span></div><div class="ml-r"><span>Картофель &mdash; 200 г</span><span class="ml-k">170</span></div><div class="ml-r"><span>Капуста тушёная</span><span class="ml-k">80</span></div></div>
-</div>
+<div class="c"><div class="ct"><span class="em">&#127869;</span> Меню дня</div><div id="method-menu"></div></div>
+<div class="c"><div class="ct"><span class="em">&#128722;</span> Продукты по методике</div><div id="method-products"></div></div>
 </div>
 
 <!-- 2: СПОРТ -->
@@ -819,33 +925,7 @@ canvas{width:100%!important;height:220px!important}
 <div class="c"><div class="ct"><span class="em">&#128203;</span> История</div><div id="weight-history" style="max-height:260px;overflow-y:auto"></div></div>
 </div>
 
-<!-- 7: ТАНЯ -->
-<div class="sw-p" data-tab="tanya">
-<div class="c"><div class="ct"><span class="em">&#10084;&#65039;</span> Время с Таней</div>
-<div class="tgr" id="tanya-ideas">
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#128694;</div><div class="tt">Прогулка</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#127916;</div><div class="tt">Фильм</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#127859;</div><div class="tt">Готовить</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#127922;</div><div class="tt">Настолки</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#128172;</div><div class="tt">Без телефонов</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#127947;</div><div class="tt">Спорт вместе</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#128248;</div><div class="tt">Фото</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#127919;</div><div class="tt">Планирование</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#128218;</div><div class="tt">Читать</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#127912;</div><div class="tt">Творить</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#128137;</div><div class="tt">Уход за собой</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#127911;</div><div class="tt">Музыка</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#128663;</div><div class="tt">Вылазка</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#127834;</div><div class="tt">Ресторан</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#128171;</div><div class="tt">Массаж</div></div>
-<div class="tc" onclick="pickIdea(this)"><div class="ti">&#127776;</div><div class="tt">Звёзды</div></div>
-</div></div>
-<div class="c"><div class="ct"><span class="em">&#128197;</span> Счётчик</div>
-<div class="sg" style="margin:0"><div class="sb"><div class="sv cp" id="tanya-week">0</div><div class="sl">Неделя</div></div><div class="sb"><div class="sv cp" id="tanya-month">0</div><div class="sl">Месяц</div></div><div class="sb"><div class="sv cp" id="tanya-streak">0</div><div class="sl">Подряд</div></div></div>
-</div>
-</div>
-
-<!-- 8: ЗАМЕТКИ -->
+<!-- 7: ЗАМЕТКИ -->
 <div class="sw-p" data-tab="notes">
 <div class="c"><div class="ct"><span class="em">&#128221;</span> Заметки</div>
 <textarea class="nbox" id="daily-notes" placeholder="Как прошёл день?..." oninput="saveNotes()"></textarea>
@@ -930,9 +1010,8 @@ canvas{width:100%!important;height:220px!important}
 <button class="nb" data-idx="4"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0L12 2.69z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg>Вода</button>
 <button class="nb" data-idx="5"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>Покупки</button>
 <button class="nb" data-idx="6"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 17l4-8 4 4 5-9"/><circle cx="20" cy="4" r="1.5" fill="currentColor" stroke="none"/></svg>Графики</button>
-<button class="nb" data-idx="7"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Таня</button>
-<button class="nb" data-idx="8"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Заметки</button>
-<button class="nb" data-idx="9"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>Чат</button>
+<button class="nb" data-idx="7"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Заметки</button>
+<button class="nb" data-idx="8"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>Чат</button>
 </div></nav>
 
 <script>
@@ -949,6 +1028,61 @@ var JSONBIN_KEY='$2a$10$CL/iXLS86luJolTcACEro.k/16A9E/Wi8t/iiXxoa1d1UaZC61Fii';
 var JSONBIN_BASE='https://api.jsonbin.io/v3';
 var APP_VERSION='2.2';
 var GH_API='https://api.github.com/repos/Efimo/tracker/releases/latest';
+
+// ═══ ONBOARDING ═══
+var onbMethod='classic';
+function checkOnboarding(){
+  if(!gs('onboarded',false)){
+    document.getElementById('onboarding').classList.remove('hide');
+    // Render method cards
+    var h='';METHODS.forEach(function(m){
+      h+='<div class="onb-mcard'+(m.id===onbMethod?' on':'')+'" onclick="pickOnbMethod(\''+m.id+'\')"><div class="om-name">'+esc(m.name)+'</div><div class="om-desc">'+m.cal+' ккал · Б'+m.prot+' Ж'+m.fat+' У'+m.carb+'</div></div>';
+    });
+    document.getElementById('onb-methods').innerHTML=h;
+  }
+}
+function pickOnbMethod(id){
+  onbMethod=id;
+  document.querySelectorAll('.onb-mcard').forEach(function(c){c.classList.remove('on')});
+  event.currentTarget.classList.add('on');
+}
+function onbNext(step){
+  document.getElementById('onb-s'+step).classList.remove('active');
+  document.getElementById('onb-s'+(step+1)).classList.add('active');
+  document.querySelectorAll('.onb-dots .od').forEach(function(d,i){d.classList.toggle('on',i===step)});
+}
+function onbBack(step){
+  document.getElementById('onb-s'+step).classList.remove('active');
+  document.getElementById('onb-s'+(step-1)).classList.add('active');
+  document.querySelectorAll('.onb-dots .od').forEach(function(d,i){d.classList.toggle('on',i===step-2)});
+}
+function onbFinish(){
+  var name=document.getElementById('onb-name').value.trim()||'User';
+  var height=parseFloat(document.getElementById('onb-height').value)||182;
+  var weight=parseFloat(document.getElementById('onb-weight').value)||90;
+  var goal=parseFloat(document.getElementById('onb-goal').value)||75;
+  // Save user config
+  ss('user_name',name);
+  ss('user_height',height);
+  START_W=weight;GOAL_W=goal;HEIGHT_CM=height;
+  ss('start_weight',weight);ss('goal_weight',goal);
+  ss('active_method',onbMethod);
+  ss('start_date',todayKey());START_DATE=todayKey();
+  // Save initial weight
+  var w=getWeights();w[todayKey()]=weight;ss('weights',w);
+  ss('onboarded',true);
+  document.getElementById('onboarding').classList.add('hide');
+  document.getElementById('head-user-name').textContent=name;
+  updateAll();
+}
+// Load saved user config
+function loadUserConfig(){
+  var n=gs('user_name',null);if(n)document.getElementById('head-user-name').textContent=n;
+  var h=gs('user_height',null);if(h)HEIGHT_CM=h;
+  var sw=gs('start_weight',null);if(sw)START_W=sw;
+  var gw=gs('goal_weight',null);if(gw)GOAL_W=gw;
+  var sd=gs('start_date',null);if(sd)START_DATE=sd;
+}
 
 // ═══ AUTH ═══
 var authMode='login';
@@ -1123,13 +1257,80 @@ function editSchX(i,v){var s=getSch();s[i].text=v;ss('schedule',s);renderSch()}
 function delSchI(i){var s=getSch();s.splice(i,1);ss('schedule',s);openEditSchedule();renderSch()}
 function addScheduleItem(){var t=document.getElementById('new-sch-time').value,x=document.getElementById('new-sch-text').value.trim(),g=document.getElementById('new-sch-tag').value;if(!t||!x)return;var s=getSch();s.push({time:t,text:x,tag:g});s.sort(function(a,b){return a.time.localeCompare(b.time)});ss('schedule',s);document.getElementById('new-sch-text').value='';openEditSchedule();renderSch()}
 
+// ═══ METHODS (Diet Plans) ═══
+var METHODS=[
+  {id:'classic',name:'Классика',cal:1800,prot:160,fat:65,carb:144,
+   menu:[
+     {meal:'Завтрак',kcal:430,items:[{n:'Творог 5% — 200 г',k:230},{n:'Банан',k:105},{n:'Чай без сахара',k:5}]},
+     {meal:'Обед',kcal:540,items:[{n:'Грудка — 180 г',k:300},{n:'Гречка — 150 г',k:165},{n:'Салат овощной',k:65}]},
+     {meal:'Ужин',kcal:490,items:[{n:'Минтай — 200 г',k:160},{n:'Картофель — 200 г',k:170},{n:'Капуста тушёная',k:80}]},
+     {meal:'Перекусы',kcal:340,items:[{n:'Яблоко',k:70},{n:'Орехи — 30 г',k:170},{n:'Кефир — 200 мл',k:100}]}
+   ],
+   products:[{n:'Куриная грудка',q:'1.5 кг'},{n:'Минтай/хек',q:'600 г'},{n:'Творог 5%',q:'1.4 кг'},{n:'Яйца',q:'20 шт'},{n:'Кефир',q:'2 л'},{n:'Гречка',q:'500 г'},{n:'Картофель',q:'1 кг'},{n:'Капуста',q:'1 кочан'},{n:'Огурцы',q:'1 кг'},{n:'Помидоры',q:'1 кг'},{n:'Бананы',q:'7 шт'},{n:'Яблоки',q:'500 г'},{n:'Орехи',q:'200 г'},{n:'Масло раст.',q:'200 мл'},{n:'Хлеб чёрный',q:'1 шт'}]
+  },
+  {id:'lowcarb',name:'Низкоуглеводная',cal:1600,prot:180,fat:80,carb:60,
+   menu:[
+     {meal:'Завтрак',kcal:400,items:[{n:'Яичница из 3 яиц',k:240},{n:'Авокадо — 70 г',k:110},{n:'Зелень',k:10}]},
+     {meal:'Обед',kcal:500,items:[{n:'Стейк из говядины — 200 г',k:340},{n:'Брокколи — 200 г',k:60},{n:'Оливковое масло — 10 г',k:90}]},
+     {meal:'Ужин',kcal:400,items:[{n:'Сёмга — 150 г',k:270},{n:'Салат из шпината',k:40},{n:'Сыр фета — 30 г',k:80}]},
+     {meal:'Перекусы',kcal:300,items:[{n:'Орехи миндаль — 40 г',k:230},{n:'Огурец',k:15},{n:'Оливки — 30 г',k:50}]}
+   ],
+   products:[{n:'Говядина',q:'1 кг'},{n:'Сёмга/форель',q:'500 г'},{n:'Яйца',q:'20 шт'},{n:'Авокадо',q:'4 шт'},{n:'Сыр фета',q:'200 г'},{n:'Брокколи',q:'1 кг'},{n:'Шпинат',q:'300 г'},{n:'Огурцы',q:'500 г'},{n:'Оливки',q:'1 банка'},{n:'Орехи миндаль',q:'300 г'},{n:'Масло оливковое',q:'250 мл'},{n:'Сливочное масло',q:'100 г'}]
+  },
+  {id:'mediterranean',name:'Средиземноморская',cal:1900,prot:140,fat:75,carb:180,
+   menu:[
+     {meal:'Завтрак',kcal:450,items:[{n:'Овсянка на воде — 80 г',k:200},{n:'Ягоды — 100 г',k:50},{n:'Мёд — 15 г',k:45},{n:'Грецкий орех — 20 г',k:130}]},
+     {meal:'Обед',kcal:600,items:[{n:'Куриные бёдра — 200 г',k:360},{n:'Булгур — 150 г',k:160},{n:'Салат с томатами и фетой',k:80}]},
+     {meal:'Ужин',kcal:500,items:[{n:'Дорадо — 250 г',k:260},{n:'Овощи гриль',k:120},{n:'Хумус — 50 г',k:130}]},
+     {meal:'Перекусы',kcal:350,items:[{n:'Фрукты сезонные',k:80},{n:'Йогурт натуральный — 200 г',k:120},{n:'Сухофрукты — 30 г',k:90}]}
+   ],
+   products:[{n:'Куриные бёдра',q:'800 г'},{n:'Рыба (дорадо/сибас)',q:'700 г'},{n:'Булгур',q:'400 г'},{n:'Овсянка',q:'300 г'},{n:'Йогурт натуральный',q:'1 кг'},{n:'Сыр фета',q:'200 г'},{n:'Хумус',q:'200 г'},{n:'Помидоры',q:'1 кг'},{n:'Баклажаны',q:'500 г'},{n:'Перец болгарский',q:'500 г'},{n:'Ягоды',q:'300 г'},{n:'Грецкие орехи',q:'200 г'},{n:'Оливковое масло',q:'250 мл'},{n:'Мёд',q:'200 г'},{n:'Сухофрукты',q:'200 г'}]
+  }
+];
+
+function getActiveMethod(){return gs('active_method','classic')}
+function setActiveMethod(id){ss('active_method',id);renderMethod();renderProd()}
+
+function renderMethod(){
+  var mid=getActiveMethod(),m=METHODS.find(function(x){return x.id===mid})||METHODS[0];
+  // Tabs
+  var th='';METHODS.forEach(function(mt){
+    th+='<div class="mtab'+(mt.id===mid?' on':'')+'" onclick="setActiveMethod(\''+mt.id+'\')">'+esc(mt.name)+'</div>';
+  });
+  document.getElementById('method-tabs').innerHTML=th;
+  // Info
+  document.getElementById('method-info').innerHTML='<div style="font-size:var(--fs-sm);color:var(--text2);line-height:2"><b style="color:var(--accent)">Цель:</b> '+m.cal+' ккал/день<br><b style="color:var(--accent)">Б:</b> '+m.prot+' г | <b style="color:var(--accent)">Ж:</b> '+m.fat+' г | <b style="color:var(--accent)">У:</b> '+m.carb+' г</div>';
+  // Update calorie limit
+  CAL_LIMIT=m.cal;
+  // Menu
+  var mh='';m.menu.forEach(function(meal){
+    mh+='<div class="ml-g"><div class="ml-h">'+esc(meal.meal)+' — '+meal.kcal+' ккал</div>';
+    meal.items.forEach(function(item){mh+='<div class="ml-r"><span>'+esc(item.n)+'</span><span class="ml-k">'+item.k+'</span></div>'});
+    mh+='</div>';
+  });
+  document.getElementById('method-menu').innerHTML=mh;
+  // Method products (card grid)
+  var ck=gs('meth_prod_ck_'+getWK()+'_'+mid,{});
+  var ph='<div class="prod-grid">';
+  m.products.forEach(function(p,i){
+    var ok=ck[i]?'ok':'';
+    ph+='<div class="prod-card '+ok+'" onclick="toggleMethodProd('+i+')"><div class="pc-check"></div><div class="pc-info"><div class="pc-name">'+esc(p.n)+'</div><div class="pc-qty">'+esc(p.q)+'</div></div></div>';
+  });
+  ph+='</div>';
+  document.getElementById('method-products').innerHTML=ph;
+}
+function toggleMethodProd(i){
+  var mid=getActiveMethod(),key='meth_prod_ck_'+getWK()+'_'+mid;
+  var ck=gs(key,{});ck[i]=!ck[i];ss(key,ck);renderMethod();
+}
+
 // ═══ PRODUCTS ═══
 var DEFAULT_PROD=[{name:'Куриная грудка',qty:'1.5 кг'},{name:'Куриные бёдра',qty:'400 г'},{name:'Куриная печень',qty:'400 г'},{name:'Рыба (минтай/хек)',qty:'600 г'},{name:'Скумбрия',qty:'200 г'},{name:'Тунец конс.',qty:'2 банки'},{name:'Говядина',qty:'300 г'},{name:'Творог 2-5%',qty:'1.5 кг'},{name:'Яйца',qty:'20 шт'},{name:'Кефир/ряженка',qty:'2 л'},{name:'Молоко 1.5%',qty:'0.5 л'},{name:'Сметана 10%',qty:'200 г'},{name:'Гречка',qty:'500 г'},{name:'Рис',qty:'300 г'},{name:'Овсянка',qty:'250 г'},{name:'Картофель',qty:'1 кг'},{name:'Капуста',qty:'1 кочан'},{name:'Морковь',qty:'500 г'},{name:'Огурцы',qty:'1 кг'},{name:'Помидоры',qty:'1 кг'},{name:'Яблоки',qty:'500 г'},{name:'Бананы',qty:'3 шт'},{name:'Масло раст.',qty:'200 мл'},{name:'Хлеб чёрный',qty:'1 шт'}];
 function getProd(){return gs('products',DEFAULT_PROD)}
 function getProdCk(){return gs('prod_ck_'+getWK(),{})}
 function setProdCk(c){ss('prod_ck_'+getWK(),c)}
 function getWK(){var d=new Date(),dy=d.getDay()||7;d.setDate(d.getDate()-dy+1);return d.toISOString().slice(0,10)}
-function renderProd(){var p=getProd(),ck=getProdCk(),h='',b=0;p.forEach(function(e,i){var ok=ck[i]?'ok':'';h+='<div class="pi '+ok+'" onclick="toggleProd('+i+')"><div class="pi-c"></div><span class="pi-n">'+esc(e.name)+'</span><span class="pi-q">'+esc(e.qty)+'</span></div>';if(ck[i])b++});document.getElementById('products-list').innerHTML=h;document.getElementById('prod-left').textContent=p.length-b;document.getElementById('prod-total').textContent=p.length}
+function renderProd(){var p=getProd(),ck=getProdCk(),h='<div class="prod-grid">',b=0;p.forEach(function(e,i){var ok=ck[i]?'ok':'';h+='<div class="prod-card '+ok+'" onclick="toggleProd('+i+')"><div class="pc-check"></div><div class="pc-info"><div class="pc-name">'+esc(e.name)+'</div><div class="pc-qty">'+esc(e.qty)+'</div></div></div>';if(ck[i])b++});h+='</div>';document.getElementById('products-list').innerHTML=h;document.getElementById('prod-left').textContent=p.length-b;document.getElementById('prod-total').textContent=p.length}
 function toggleProd(i){var c=getProdCk();c[i]=!c[i];setProdCk(c);renderProd()}
 function openEditProducts(){var p=getProd(),h='';p.forEach(function(e,i){h+='<div class="mo-i"><input value="'+esc(e.name)+'" onchange="editPN('+i+',this.value)" style="flex:2"><input value="'+esc(e.qty)+'" onchange="editPQ('+i+',this.value)" style="max-width:80px"><button class="del" onclick="delP('+i+')">&#10005;</button></div>'});document.getElementById('edit-products-list').innerHTML=h;openModal('modal-products')}
 function editPN(i,v){var p=getProd();p[i].name=v;ss('products',p);renderProd()}
@@ -1152,10 +1353,6 @@ function initWater(){var g=document.getElementById('water-grid'),h='';for(var i=
 function toggleW(i){var c=getW();setW(i+1===c?i:i+1);updateW();autoSync()}
 function updateW(){var c=getW();document.querySelectorAll('.wd').forEach(function(e,i){if(i<c)e.classList.add('on');else e.classList.remove('on')});document.getElementById('water-count').textContent=c;document.getElementById('water-progress').style.width=(c/WATER_GOAL*100)+'%';
 var h='';for(var d=0;d<7;d++){var dt=new Date();dt.setDate(dt.getDate()-d);var dk=dt.toISOString().slice(0,10),cnt=gs('water_'+dk,0);h+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;font-weight:500"><span style="min-width:72px;color:var(--text3)">'+dk+'</span><div style="flex:1;background:var(--ring-track);border-radius:100px;height:8px;overflow:hidden"><div style="width:'+Math.min(100,cnt/WATER_GOAL*100)+'%;height:100%;background:var(--blue);border-radius:100px"></div></div><span style="min-width:36px;text-align:right;color:var(--blue);font-weight:700;font-family:JetBrains Mono">'+cnt+'</span></div>'}document.getElementById('water-history').innerHTML=h}
-
-// ═══ TANYA ═══
-function pickIdea(el){document.querySelectorAll('.tc').forEach(function(e){e.classList.remove('pk')});el.classList.add('pk');var t=gs('tanya',{});t[todayKey()]=el.querySelector('.tt').textContent;ss('tanya',t);updateTS();autoSync()}
-function updateTS(){var t=gs('tanya',{}),today=new Date(),wk=0,mo=0,st=0;for(var d=0;d<30;d++){var dt=new Date(today);dt.setDate(dt.getDate()-d);var dk=dt.toISOString().slice(0,10),dc=gs('checks_'+dk,{}),has=dc.tanya||t[dk];if(d<7&&has)wk++;if(has)mo++;if(d===st&&has)st++}document.getElementById('tanya-week').textContent=wk;document.getElementById('tanya-month').textContent=mo;document.getElementById('tanya-streak').textContent=st}
 
 // ═══ NOTES ═══
 function saveNotes(){var n=gs('notes',{});n[todayKey()]=document.getElementById('daily-notes').value;ss('notes',n)}
@@ -1242,13 +1439,14 @@ function updateAll(){
   // Date
   var d=new Date(),dn=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],mn=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
   document.getElementById('top-date').textContent=dn[d.getDay()]+', '+d.getDate()+' '+mn[d.getMonth()];
-  renderTasks();renderSch();renderProd();loadChecks();updateTS();updateWH();updateCal();updateW();loadNotes();drawWeightChart();
-  var t=gs('tanya',{});if(t[todayKey()])document.querySelectorAll('.tc').forEach(function(el){if(el.querySelector('.tt').textContent===t[todayKey()])el.classList.add('pk')});
+  renderTasks();renderSch();renderMethod();renderProd();loadChecks();updateWH();updateCal();updateW();loadNotes();drawWeightChart();
 }
 
 // ═══ INIT ═══
+loadUserConfig();
 tick();updateSchHL();setInterval(function(){tick();updateSchHL()},30000);
 initWater();initSwipe();updateAll();
+checkOnboarding();
 if(gs('jsonbin_id',null))setTimeout(cloudSync,1000);
 setTimeout(checkForUpdate,2000);
 window.addEventListener('resize',drawWeightChart);
