@@ -53,6 +53,7 @@ public class MainActivity extends Activity {
         }
 
         webView = new WebView(this);
+        webView.setFitsSystemWindows(true);
         setContentView(webView);
 
         WebSettings settings = webView.getSettings();
@@ -77,15 +78,23 @@ public class MainActivity extends Activity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                if (url.contains("jsonbin.io") || url.contains("openai.com")) {
+                // API calls — stay in WebView
+                if (url.contains("jsonbin.io") || url.contains("openai.com") || url.contains("api.github.com")) {
                     return false;
                 }
-                // Open APK downloads in system browser
-                if (url.endsWith(".apk")) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(intent);
+                // GitHub releases / APK downloads — open in system browser
+                if (url.contains("github.com/") || url.contains("githubusercontent.com") || url.endsWith(".apk")) {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        // fallback
+                        view.loadUrl(url);
+                    }
                     return true;
                 }
+                // Everything else in WebView
                 view.loadUrl(url);
                 return true;
             }

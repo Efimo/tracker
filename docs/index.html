@@ -54,7 +54,7 @@ html{scroll-behavior:smooth}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px}
 
-.app{max-width:480px;margin:0 auto;padding:0 16px 90px;position:relative;overflow:hidden}
+.app{max-width:480px;margin:0 auto;padding:0 16px 90px;padding-top:max(12px,env(safe-area-inset-top));position:relative}
 
 /* === TOP BAR === */
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 0 8px}
@@ -75,12 +75,12 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 input[type="file"]{display:none}
 
 /* === SWIPE CONTAINER === */
-.swipe-container{position:relative;overflow:hidden;touch-action:pan-y;width:100%}
-.swipe-track{display:flex;transition:transform .35s cubic-bezier(.22,1,.36,1);will-change:transform;width:100%}
-.swipe-page{min-width:100%;flex-shrink:0;overflow-y:auto;overflow-x:hidden;padding:0 2px}
+.swipe-container{position:relative;overflow:hidden;touch-action:pan-y;width:100%;clip-path:inset(0)}
+.swipe-track{display:flex;transition:transform .35s cubic-bezier(.22,1,.36,1);will-change:transform}
+.swipe-page{width:100%;min-width:100%;flex-shrink:0;overflow:hidden}
 
 /* === HERO === */
-.hero{background:var(--grad1);border-radius:20px;padding:22px;margin:12px 0;color:#fff;position:relative;overflow:hidden}
+.hero{background:var(--grad1);border-radius:20px;padding:18px 16px;margin:8px 0;color:#fff;position:relative;overflow:hidden}
 .hero::after{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:rgba(255,255,255,.1);border-radius:50%}
 .hero-row{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
 .hero-block{text-align:center}
@@ -97,10 +97,10 @@ input[type="file"]{display:none}
 .hero-chip .cl{font-size:9px;opacity:.6;margin-top:2px;font-weight:600;letter-spacing:.3px}
 
 /* Weight input */
-.w-input{display:flex;gap:8px;margin-top:14px;position:relative;z-index:1}
-.w-input input{flex:1;padding:12px;border-radius:var(--radius-sm);border:none;background:rgba(255,255,255,.18);color:#fff;font-size:16px;font-weight:700;text-align:center;font-family:inherit;outline:none;backdrop-filter:blur(4px)}
-.w-input input::placeholder{color:rgba(255,255,255,.5);font-weight:500;font-size:13px}
-.w-input button{padding:12px 22px;border-radius:var(--radius-sm);border:none;background:#fff;color:var(--accent);font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;transition:.2s}
+.w-input{display:flex;gap:6px;margin-top:12px;position:relative;z-index:1}
+.w-input input{flex:1;min-width:0;padding:11px 8px;border-radius:var(--radius-sm);border:none;background:rgba(255,255,255,.18);color:#fff;font-size:15px;font-weight:700;text-align:center;font-family:inherit;outline:none;backdrop-filter:blur(4px)}
+.w-input input::placeholder{color:rgba(255,255,255,.5);font-weight:500;font-size:12px}
+.w-input button{padding:11px 14px;border-radius:var(--radius-sm);border:none;background:#fff;color:var(--accent);font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;transition:.2s;white-space:nowrap;flex-shrink:0}
 .w-input button:active{transform:scale(.95)}
 
 /* === CARDS === */
@@ -256,20 +256,20 @@ canvas{width:100%!important;height:200px!important}
 
 /* === RESPONSIVE === */
 @media(max-width:600px){
-.app{padding:0 10px 90px}
-.hero{padding:16px;margin:8px 0}
-.hero-block .hv{font-size:28px}
-.w-input input{font-size:14px;padding:10px}
-.w-input button{padding:10px 16px;font-size:12px}
-.card{padding:14px}
+.app{padding:0 10px 90px;padding-top:max(10px,env(safe-area-inset-top))}
+.hero{padding:14px 12px}
+.hero-block .hv{font-size:26px}
+.hero-arrow{font-size:16px}
+.card{padding:12px}
 }
 @media(max-width:380px){
 .hero-block .hv{font-size:22px}
-.hero-chip .cv{font-size:15px}
-.topbar-actions{gap:4px}
-.topbar-btn{width:32px;height:32px;font-size:14px}
-.nb{font-size:8px;min-width:38px;padding:5px 0}
-.nb svg{width:18px;height:18px}
+.hero-chip .cv{font-size:14px}
+.hero-chip{padding:8px 4px}
+.topbar-actions{gap:3px}
+.topbar-btn{width:30px;height:30px;font-size:13px}
+.nb{font-size:8px;min-width:36px;padding:4px 0}
+.nb svg{width:16px;height:16px}
 }
 .day-menu,.phase-content{display:none}.day-menu.active,.phase-content.active{display:block}
 
@@ -845,12 +845,26 @@ function dismissUpdate(){
 function downloadUpdate(){
   if(!_updateData||!_updateData.apkUrl)return;
   var btn=document.getElementById('update-btn');
-  btn.textContent='Открываю скачивание...';
+  var url=_updateData.apkUrl;
+  btn.textContent='Открываю...';
   btn.style.opacity='0.6';
-  // Simply navigate to APK URL — Android DownloadManager handles it
-  window.location.href=_updateData.apkUrl;
+  // Open in system browser via intent (works in WebView)
+  var intentUrl='intent://'+url.replace(/^https?:\/\//,'')+'#Intent;scheme=https;action=android.intent.action.VIEW;end';
+  // Try multiple methods
+  var w=window.open(url,'_blank');
+  if(!w){
+    // Fallback: intent URL
+    try{window.location.href=intentUrl}catch(e){}
+    // Fallback 2: create invisible iframe
+    setTimeout(function(){
+      var iframe=document.createElement('iframe');
+      iframe.style.display='none';iframe.src=url;
+      document.body.appendChild(iframe);
+      setTimeout(function(){document.body.removeChild(iframe)},3000);
+    },500);
+  }
   setTimeout(function(){
-    btn.textContent='Проверьте уведомления \u2193';
+    btn.textContent='Скачайте файл из браузера';
     btn.style.opacity='1';
   },2000);
 }
